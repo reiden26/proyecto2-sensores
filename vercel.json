@@ -15,7 +15,8 @@
       "dest": "https://proyecto2-sensores-production.up.railway.app/$1",
       "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
       "headers": {
-        "cache-control": "no-cache"
+        "cache-control": "no-cache",
+        "access-control-allow-origin": "*"
       }
     },
     {
