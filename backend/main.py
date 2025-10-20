@@ -16,7 +16,10 @@ SENSOR_CONNECT_GRACE_SECONDS = int(os.getenv("SENSOR_CONNECT_GRACE_SECONDS", "15
 
 load_dotenv()
 
-app = FastAPI()
+app = FastAPI(title="API Sensores Proyecto 2")
+
+# ✅ Crea las tablas automáticamente en la BD (Railway)
+models.Base.metadata.create_all(bind=engine)
 
 # Configuración CORS desde variables de entorno
 # Para desarrollo, permitir todos los orígenes de localhost
