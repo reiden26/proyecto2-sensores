@@ -1,4 +1,8 @@
 {
+  "framework": "angular",
+  "buildCommand": "npx --yes @angular/cli@latest build --configuration production",
+  "installCommand": "npm ci --legacy-peer-deps",
+  "outputDirectory": "dist/frontend/browser",
   "rewrites": [
     {
       "source": "/api/:path*",
