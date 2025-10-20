@@ -6,7 +6,7 @@
       "use": "@vercel/static-build",
       "config": {
         "distDir": "dist/frontend/browser",
-        "buildCommand": "cd frontend && npm install --legacy-peer-deps && npx ng build --output-path=dist/frontend/browser"
+        "buildCommand": "cd frontend && npm ci --legacy-peer-deps && npm run build"
       }
     }
   ],
@@ -22,7 +22,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/dist/frontend/browser/$1"
     }
   ]
 }
