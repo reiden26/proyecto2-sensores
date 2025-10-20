@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiBaseUrl: '/api'
+  apiBaseUrl: 'https://proyecto2-sensores-production.up.railway.app'
 };
 
 
