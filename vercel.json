@@ -1,13 +1,13 @@
 {
-  "buildCommand": "cd frontend && npm install --legacy-peer-deps && ng build --output-path=dist/frontend/browser",
-  "outputDirectory": "frontend/dist/frontend/browser",
+  "buildCommand": "npm install --legacy-peer-deps && ng build --output-path=dist/frontend/browser",
+  "outputDirectory": "dist/frontend/browser",
   "rewrites": [
     {
       "source": "/api/:path*",
       "destination": "https://proyecto2-sensores-production.up.railway.app/:path*"
     },
     {
-      "source": "/(.*)", 
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
