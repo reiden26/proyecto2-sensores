@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npx ng build --output-path=dist/frontend/browser",
+  "buildCommand": "cd frontend && npx ng build --output-path=dist/frontend/browser",
   "outputDirectory": "frontend/dist/frontend/browser",
   "rewrites": [
     {
