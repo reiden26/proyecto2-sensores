@@ -1,7 +1,4 @@
 {
-  "installCommand": "cd frontend && npm ci --legacy-peer-deps",
-  "buildCommand": "cd frontend && npx ng build --configuration production",
-  "outputDirectory": "frontend/dist/frontend/browser",
   "rewrites": [
     {
       "source": "/api/:path*",
