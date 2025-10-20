@@ -1,0 +1,794 @@
+/* Fondo con partículas animadas - Aparece inmediatamente */
+.register-background {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  overflow: hidden;
+  z-index: 1000;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  opacity: 1;
+  animation: backgroundFadeIn 0.3s ease-out forwards;
+}
+
+@keyframes backgroundFadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Botón de cerrar eliminado - se usa el X integrado del modal */
+
+.register-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(0, 137, 123, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(0, 172, 193, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(0, 137, 123, 0.2) 0%, transparent 50%);
+  /* Animación removida - fondo estático */
+}
+
+/* Partículas flotantes */
+.particle {
+  position: absolute;
+  background: rgba(0, 137, 123, 0.6);
+  border-radius: 50%;
+  animation: float 15s infinite linear;
+}
+
+.particle:nth-child(1) { width: 4px; height: 4px; left: 10%; animation-delay: 0s; }
+.particle:nth-child(2) { width: 6px; height: 6px; left: 20%; animation-delay: 2s; }
+.particle:nth-child(3) { width: 3px; height: 3px; left: 30%; animation-delay: 4s; }
+.particle:nth-child(4) { width: 5px; height: 5px; left: 40%; animation-delay: 6s; }
+.particle:nth-child(5) { width: 4px; height: 4px; left: 50%; animation-delay: 8s; }
+.particle:nth-child(6) { width: 7px; height: 7px; left: 60%; animation-delay: 10s; }
+.particle:nth-child(7) { width: 3px; height: 3px; left: 70%; animation-delay: 12s; }
+.particle:nth-child(8) { width: 5px; height: 5px; left: 80%; animation-delay: 14s; }
+.particle:nth-child(9) { width: 4px; height: 4px; left: 90%; animation-delay: 16s; }
+
+@keyframes float {
+  0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+}
+
+/* Card principal con glassmorphism mejorado */
+.register-card {
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(25px) !important;
+  -webkit-backdrop-filter: blur(25px) !important;
+  border: 1px solid rgba(0, 137, 123, 0.3) !important;
+  border-radius: 24px !important;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  max-width: 840px;
+  width: 140%;
+  margin: auto;
+  color: #ffffff !important;
+  position: relative;
+  overflow: hidden;
+  z-index: 1001;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(50px) scale(0.9);
+  animation: cardEntrance 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s forwards;
+}
+
+@keyframes cardEntrance {
+  0% {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(50px) scale(0.9);
+  }
+  1% {
+    visibility: visible;
+  }
+  100% {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Efecto de brillo en el borde */
+.register-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 24px;
+  padding: 2px;
+  background: linear-gradient(45deg, 
+    rgba(0, 137, 123, 0.8), 
+    rgba(0, 172, 193, 0.8), 
+    rgba(0, 137, 123, 0.8));
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  animation: borderGlow 3s ease-in-out infinite;
+}
+
+@keyframes borderGlow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* Forzar el color del texto en toda la card */
+.register-card * {
+  color: #ffffff !important;
+}
+
+/* Título del registro con animación */
+.register-title {
+  color: #ffffff !important;
+  text-align: center;
+  font-size: 1.8rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 2rem !important;
+  background: linear-gradient(45deg, #00ACC1, #00897B, #00ACC1);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 3s ease-in-out infinite;
+  position: relative;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.register-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(45deg, #00ACC1, #00897B);
+  border-radius: 2px;
+  animation: underlineGlow 2s ease-in-out infinite;
+}
+
+@keyframes underlineGlow {
+  0%, 100% { box-shadow: 0 0 5px rgba(0, 172, 193, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(0, 137, 123, 0.8); }
+}
+
+/* Formulario */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 0;
+  color: #ffffff !important;
+}
+
+/* Asegurar que todos los elementos del formulario tengan texto blanco */
+.register-form * {
+  color: #ffffff !important;
+}
+
+/* Campos de formulario */
+.full-width {
+  width: 100%;
+}
+
+/* Personalizar mat-form-field para glassmorphism con tema verde */
+:host ::ng-deep .mat-mdc-form-field {
+  margin-bottom: 1.5rem !important;
+  animation: fieldEntrance 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s;
+  animation-fill-mode: both;
+  opacity: 0;
+}
+
+:host ::ng-deep .mat-mdc-form-field:nth-child(1) { 
+  animation-delay: 0.3s; 
+  animation-name: fieldEntrance;
+}
+:host ::ng-deep .mat-mdc-form-field:nth-child(2) { 
+  animation-delay: 0.3s; 
+  animation-name: fieldEntrance;
+}
+:host ::ng-deep .mat-mdc-form-field:nth-child(3) { 
+  animation-delay: 0.3s; 
+  animation-name: fieldEntrance;
+}
+:host ::ng-deep .mat-mdc-form-field:nth-child(4) { 
+  animation-delay: 0.3s; 
+  animation-name: fieldEntrance;
+}
+
+@keyframes fieldEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateY(-5px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Ocultar TODOS los bordes de Material Design */
+:host ::ng-deep .mat-mdc-form-field {
+  .mat-mdc-form-field-outline,
+  .mat-mdc-form-field-outline-thick,
+  .mat-mdc-form-field-outline-start,
+  .mat-mdc-form-field-outline-end,
+  .mat-mdc-form-field-outline-notched,
+  .mat-mdc-form-field-outline-gap {
+    display: none !important;
+  }
+  
+  /* Forzar que no haya bordes en ningún estado */
+  .mat-mdc-form-field-outline-start,
+  .mat-mdc-form-field-outline-end,
+  .mat-mdc-form-field-outline-gap,
+  .mat-mdc-form-field-outline-notch {
+    display: none !important;
+  }
+  
+  /* Ocultar bordes de Material Design completamente */
+  .mat-mdc-form-field-outline {
+    display: none !important;
+  }
+  
+  .mat-mdc-form-field-outline-thick {
+    display: none !important;
+  }
+  
+  .mat-mdc-text-field-wrapper {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    border-bottom: 2px solid rgba(0, 137, 123, 0.3) !important;
+    transition: all 0.3s ease !important;
+    position: relative;
+    overflow: hidden;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+  
+  .mat-mdc-text-field-wrapper::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #00ACC1, #00897B);
+    transition: width 0.4s ease;
+    z-index: 1;
+  }
+  
+  .mat-mdc-text-field-wrapper:hover::before {
+    width: 100%;
+  }
+  
+  .mat-mdc-text-field-wrapper:hover {
+    border-bottom-color: rgba(0, 172, 193, 0.6) !important;
+  }
+  
+  .mat-mdc-form-field-focus-overlay {
+    background: transparent !important;
+  }
+  
+  /* Línea inferior personalizada para el estado focused */
+  &.mat-focused .mat-mdc-text-field-wrapper::before {
+    width: 100% !important;
+    background: linear-gradient(90deg, #00ACC1, #00897B) !important;
+    box-shadow: 0 0 10px rgba(0, 172, 193, 0.5) !important;
+  }
+  
+  &.mat-focused .mat-mdc-text-field-wrapper {
+    border-bottom-color: transparent !important;
+  }
+  
+  .mat-mdc-input-element {
+    color: #ffffff !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+  }
+  
+          .mat-mdc-input-element::placeholder {
+            color: rgba(0, 172, 193, 0.7) !important;
+            opacity: 1 !important;
+          }
+  
+  .mat-mdc-form-field-label {
+    color: rgba(0, 172, 193, 0.8) !important;
+    font-weight: 500 !important;
+  }
+  
+          .mat-mdc-form-field-label.mdc-floating-label--float-above {
+            color: rgba(0, 172, 193, 0.7) !important;
+            font-weight: 600 !important;
+          }
+  
+  .mat-mdc-form-field-hint-wrapper .mat-mdc-form-field-hint,
+  .mat-mdc-form-field-error-wrapper .mat-mdc-form-field-error {
+    color: rgba(0, 172, 193, 0.9) !important;
+    font-weight: 500 !important;
+  }
+  
+  .mat-icon {
+    color: rgba(0, 172, 193, 0.8) !important;
+    transition: all 0.3s ease !important;
+  }
+  
+  .mat-icon:hover {
+    color: rgba(0, 172, 193, 1) !important;
+    transform: scale(1.1) !important;
+  }
+}
+
+/* Estilos para placeholder más visible */
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-infix input::placeholder {
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-weight: 400 !important;
+  opacity: 1 !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-infix input::-webkit-input-placeholder {
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-weight: 400 !important;
+  opacity: 1 !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-infix input::-moz-placeholder {
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-weight: 400 !important;
+  opacity: 1 !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-infix input:-ms-input-placeholder {
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-weight: 400 !important;
+  opacity: 1 !important;
+}
+
+/* Estilos para el texto del input */
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-infix input {
+  color: rgba(255, 255, 255, 0.95) !important;
+  font-weight: 500 !important;
+  caret-color: rgba(0, 172, 193, 0.8) !important;
+}
+
+/* Alinear correctamente el botón de mostrar/ocultar contraseña en el sufijo */
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-form-field-icon-suffix {
+  align-items: center !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-form-field-icon-suffix .mat-mdc-icon-button {
+  height: 40px !important;
+  width: 40px !important;
+  line-height: 40px !important;
+  padding: 0 !important;
+  margin: 0 4px 0 0 !important;
+}
+
+/* Botón de registro con tema verde y efectos mejorados */
+.register-button {
+  width: 100% !important;
+  height: 56px !important;
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+  margin-top: 2rem !important;
+  background: linear-gradient(135deg, #00897B, #00ACC1, #00897B) !important;
+  background-size: 200% 200% !important;
+  color: white !important;
+  border-radius: 16px !important;
+  box-shadow: 
+    0 8px 25px rgba(0, 137, 123, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  position: relative !important;
+  text-align: center !important;
+  overflow: hidden !important;
+  animation: buttonEntrance 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s both !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  opacity: 0;
+}
+
+@keyframes buttonEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.8);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-5px) scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.register-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.register-button:hover::before {
+  left: 100%;
+}
+
+.register-button:hover:not(:disabled) {
+  background-position: 100% 0 !important;
+  transform: translateY(-3px) scale(1.02) !important;
+  box-shadow: 
+    0 12px 35px rgba(0, 137, 123, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+.register-button:active:not(:disabled) {
+  transform: translateY(-1px) scale(0.98) !important;
+  box-shadow: 
+    0 6px 20px rgba(0, 137, 123, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Forzar centrado del contenido interno */
+:host ::ng-deep .register-button .mat-mdc-button-touch-target {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+:host ::ng-deep .register-button .mdc-button__label {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+}
+
+.register-button:hover:not(:disabled) {
+  background: linear-gradient(45deg, #2980b9, #1e5f8b) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4) !important;
+}
+
+.register-button:disabled {
+  background: rgba(0, 137, 123, 0.3) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: 0 4px 15px rgba(0, 137, 123, 0.2) !important;
+}
+
+/* Skeleton loader para el botón */
+.register-button.loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.register-button.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Spinner del botón mejorado */
+.button-spinner {
+  margin: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+  animation: spin 1s linear infinite !important;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+:host ::ng-deep .button-spinner .mat-mdc-progress-spinner {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+  width: 24px !important;
+  height: 24px !important;
+}
+
+:host ::ng-deep .button-spinner .mat-mdc-progress-spinner circle {
+  stroke: #ffffff !important;
+  stroke-width: 3 !important;
+  stroke-linecap: round !important;
+  animation: pulse 1.5s ease-in-out infinite !important;
+}
+
+@keyframes pulse {
+  0%, 100% { stroke-opacity: 1; }
+  50% { stroke-opacity: 0.5; }
+}
+
+        /* Estilos para los snackbars con tema verde */
+        :host ::ng-deep .success-snackbar {
+          background: linear-gradient(135deg, #00897B, #00ACC1) !important;
+          color: white !important;
+          box-shadow: 0 8px 25px rgba(0, 137, 123, 0.4) !important;
+          border: 1px solid rgba(0, 172, 193, 0.3) !important;
+          z-index: 1001 !important;
+          position: fixed !important;
+          top: 20px !important;
+          left: 50% !important;
+          transform: translateX(-50%) !important;
+          max-width: 400px !important;
+          border-radius: 12px !important;
+        }
+
+:host ::ng-deep .error-snackbar {
+  background: linear-gradient(135deg, #e53e3e, #fc8181) !important;
+  color: white !important;
+  box-shadow: 0 8px 25px rgba(229, 62, 62, 0.4) !important;
+  border: 1px solid rgba(252, 129, 129, 0.3) !important;
+}
+
+:host ::ng-deep .warning-snackbar {
+  background: linear-gradient(135deg, #f6ad55, #fbb6ce) !important;
+  color: white !important;
+  box-shadow: 0 8px 25px rgba(246, 173, 85, 0.4) !important;
+  border: 1px solid rgba(251, 182, 206, 0.3) !important;
+}
+
+/* Animación de entrada para snackbars */
+:host ::ng-deep .mat-mdc-snack-bar-container {
+  animation: snackbarSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+@keyframes snackbarSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Enlace de navegación */
+.navigation-link {
+  text-align: center;
+  margin-top: 2rem;
+  animation: fieldEntrance 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s both;
+  opacity: 0;
+}
+
+.navigation-text {
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-size: 0.95rem !important;
+  margin-bottom: 0.5rem;
+}
+
+.navigation-button {
+  background: transparent !important;
+  border: 1px solid rgba(0, 172, 193, 0.4) !important;
+  color: #00ACC1 !important;
+  padding: 0.5rem 1.5rem !important;
+  border-radius: 20px !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  transition: all 0.3s ease !important;
+  cursor: pointer !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.navigation-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 172, 193, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.navigation-button:hover::before {
+  left: 100%;
+}
+
+.navigation-button:hover {
+  background: rgba(0, 172, 193, 0.1) !important;
+  border-color: #00ACC1 !important;
+  color: #ffffff !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 15px rgba(0, 172, 193, 0.3) !important;
+}
+
+/* Animación de transición entre formularios */
+.form-transition {
+  animation: formSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes formSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(30px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* Spinner del botón */
+.button-spinner {
+  margin: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+}
+
+:host ::ng-deep .button-spinner .mat-mdc-progress-spinner {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+}
+
+:host ::ng-deep .button-spinner .mat-mdc-progress-spinner circle {
+  stroke: #ffffff !important;
+}
+
+/* Forzar que el span del texto también esté centrado */
+:host ::ng-deep .register-button span {
+  display: inline-flex !important;
+  align-items: center !important;
+  vertical-align: middle !important;
+}
+
+/* FORZAR SOLO LÍNEA INFERIOR - ESTILOS ULTRA ESPECÍFICOS */
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-text-field-wrapper {
+  border: none !important;
+  border-bottom: 2px solid rgba(0, 137, 123, 0.3) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline {
+  display: none !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-thick {
+  display: none !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-start {
+  display: none !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-end {
+  display: none !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-gap {
+  display: none !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-notch {
+  display: none !important;
+}
+
+/* ESTILOS AÚN MÁS ESPECÍFICOS PARA SOBRESCRIBIR MATERIAL DESIGN */
+:host ::ng-deep .mat-mdc-form-field.mat-mdc-form-field-type-mat-input .mat-mdc-text-field-wrapper {
+  border: none !important;
+  border-bottom: 2px solid rgba(0, 137, 123, 0.3) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field.mat-mdc-form-field-type-mat-input .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline {
+  display: none !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field.mat-mdc-form-field-type-mat-input .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-thick {
+  display: none !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field.mat-mdc-form-field-type-mat-input .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-start {
+  display: none !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field.mat-mdc-form-field-type-mat-input .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-end {
+  display: none !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field.mat-mdc-form-field-type-mat-input .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-gap {
+  display: none !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field.mat-mdc-form-field-type-mat-input .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-notch {
+  display: none !important;
+}
+
+/* ESTILOS PARA EL ESTADO FOCUSED */
+:host ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper {
+  border: none !important;
+  border-bottom: 2px solid rgba(0, 172, 193, 0.8) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline {
+  display: none !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-thick {
+  display: none !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-start {
+  display: none !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-end {
+  display: none !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-gap {
+  display: none !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-notch {
+  display: none !important;
+}

@@ -1,0 +1,8 @@
+/* Estilos mínimos para la página */
+:host {
+  display: block;
+  width: 100%;
+}
+
+
+

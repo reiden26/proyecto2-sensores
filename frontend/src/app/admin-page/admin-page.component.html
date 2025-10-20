@@ -1,0 +1,8 @@
+<admin-navbar></admin-navbar>
+<div class="admin-bg">
+  <div class="admin-card">
+    <h2>Bienvenido, Administrador</h2>
+    <p *ngIf="nombre">Tu nombre: <strong>{{ nombre }}</strong></p>
+    <p *ngIf="!nombre">No se pudo obtener el nombre del usuario.</p>
+  </div>
+</div>

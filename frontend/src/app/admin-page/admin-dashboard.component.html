@@ -1,0 +1,78 @@
+<div class="admin-dashboard">
+  <admin-navbar></admin-navbar>
+
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #drawer mode="side" [opened]="showSidebar" class="sidenav glass-sidenav">
+      <div class="sidenav-header">
+        <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=400&h=100&fit=crop&crop=center" alt="Sensores de Aire" class="admin-header-image">
+        <button mat-icon-button (click)="toggleSidebar()" class="toggle-button">
+          <mat-icon>{{ showSidebar ? 'chevron_left' : 'chevron_right' }}</mat-icon>
+        </button>
+      </div>
+
+      <mat-nav-list class="navigation-list">
+        <a mat-list-item (click)="navigateTo('dashboard')" [class.active]="isActiveRoute('/admin') || isActiveRoute('/admin/dashboard')" class="nav-item custom-nav-item">
+          <mat-icon matListItemIcon>dashboard</mat-icon>
+          <span matListItemTitle>Panel Principal</span>
+        </a>
+        
+        <a mat-list-item (click)="navigateTo('usuarios')" [class.active]="isActiveRoute('/admin/usuarios')" class="nav-item custom-nav-item">
+          <mat-icon matListItemIcon>people</mat-icon>
+          <span matListItemTitle>Gestión de Usuarios</span>
+        </a>
+        
+        <a mat-list-item (click)="navigateTo('datos')" [class.active]="isActiveRoute('/admin/datos')" class="nav-item custom-nav-item">
+          <mat-icon matListItemIcon>analytics</mat-icon>
+          <span matListItemTitle>Datos de Sensores</span>
+        </a>
+        
+        <a mat-list-item (click)="navigateTo('reportes')" [class.active]="isActiveRoute('/admin/reportes')" class="nav-item custom-nav-item">
+          <mat-icon matListItemIcon>assessment</mat-icon>
+          <span matListItemTitle>Reportes</span>
+        </a>
+      </mat-nav-list>
+
+      <!-- Botón Salir en la parte inferior -->
+      <div class="logout-section">
+        <button mat-icon-button class="logout-button" (click)="openLogoutConfirm()" title="Cerrar sesión">
+          <mat-icon>logout</mat-icon>
+        </button>
+      </div>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="main-content">
+      <div class="content-wrapper">
+        <router-outlet></router-outlet>
+      </div>
+      <!-- Botón flotante para reabrir el sidenav cuando está oculto -->
+      <button *ngIf="!showSidebar" mat-fab class="sidenav-fab" (click)="toggleSidebar()" aria-label="Mostrar menú">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+
+  <!-- Modal de confirmación de logout mejorado -->
+  <div *ngIf="showLogoutConfirm" class="confirm-overlay">
+    <div class="confirm-card">
+      <div class="confirm-header">
+        <div class="confirm-icon">
+          <mat-icon>logout</mat-icon>
+        </div>
+        <h4>Cerrar Sesión</h4>
+      </div>
+      <div class="confirm-body">
+        <p>¿Estás seguro de que deseas cerrar tu sesión?</p>
+      </div>
+      <div class="confirm-actions">
+        <button class="btn-cancel" (click)="cancelLogout()">
+          <mat-icon>close</mat-icon>
+          <span>Cancelar</span>
+        </button>
+        <button class="btn-confirm" (click)="acceptLogout()">
+          <mat-icon>logout</mat-icon>
+          <span>Cerrar Sesión</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

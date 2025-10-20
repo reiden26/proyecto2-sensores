@@ -1,0 +1,32 @@
+<nav class="admin-navbar">
+  <div class="navbar-left">
+    <h2>Proyecto II</h2>
+  </div>
+
+  <div class="navbar-right">
+        <!-- Notificaciones -->
+        <app-notification-bell userRole="admin"></app-notification-bell>
+        
+        <div class="user-info" (click)="toggleDropdown($event)">
+          <div class="user-avatar">
+            <img *ngIf="usuario?.imagen_url" [src]="usuario.imagen_url" [alt]="usuario.nombre" class="user-image">
+            <mat-icon *ngIf="!usuario?.imagen_url">admin_panel_settings</mat-icon>
+          </div>
+          <span class="user-name">{{ nombreUsuario }}</span>
+          <span class="arrow" [class.rotated]="isDropdownOpen">▾</span>
+          <div class="user-menu" [class.open]="isDropdownOpen">
+            <a class="menu-item" [routerLink]="['/admin/configuracion']" (click)="isDropdownOpen = false">
+              <mat-icon class="settings-icon">settings</mat-icon>
+              <span>Configuración</span>
+            </a>
+            <div class="menu-divider"></div>
+            <a class="menu-item" (click)="logout(); isDropdownOpen = false">
+              <mat-icon class="logout-icon">logout</mat-icon>
+              <span>Cerrar Sesión</span>
+            </a>
+          </div>
+        </div>
+  </div>
+</nav>
+
+

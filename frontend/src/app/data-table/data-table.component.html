@@ -1,0 +1,201 @@
+<div class="data-table-bg">
+  <!-- Header Card -->
+  <mat-card class="header-card">
+    <mat-card-header>
+      <div class="header-avatar">
+        <mat-icon>sensors</mat-icon>
+      </div>
+      <div>
+        <mat-card-title>Datos de Sensores</mat-card-title>
+        <mat-card-subtitle>Gestión de registros de sensores del sistema</mat-card-subtitle>
+      </div>
+    </mat-card-header>
+  </mat-card>
+
+  <!-- Actions Card -->
+  <mat-card class="actions-card">
+    <mat-card-content>
+      <div class="actions-container">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Buscar datos</mat-label>
+          <input matInput [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()" placeholder="Nombre, email o estado">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+        <button mat-raised-button color="primary" class="create-btn" (click)="openCreateModal(createTpl)">
+          <mat-icon>add</mat-icon>
+          <span>Nuevo Registro</span>
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Stats Card -->
+  <mat-card class="stats-card">
+    <mat-card-content>
+      <div class="stats-section">
+        <div class="stat-item">
+          <span class="stat-number">{{ getTotalRecords() }}</span>
+          <span class="stat-label">Total Registros</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number status-aceptable">{{ getRecordsByStatus('Aceptable') }}</span>
+          <span class="stat-label">Aceptables</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number status-advertencia">{{ getRecordsByStatus('Advertencia') }}</span>
+          <span class="stat-label">Advertencias</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number status-peligro">{{ getRecordsByStatus('Peligro') }}</span>
+          <span class="stat-label">Peligros</span>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Table Card -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      <div class="table-wrapper" *ngIf="!isLoading; else loadingTemplate">
+        <table mat-table [dataSource]="dataSource" matSort class="data-table">
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+            <td mat-cell *matCellDef="let item">{{ item.id }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+            <td mat-cell *matCellDef="let item">{{ item.nombre }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+            <td mat-cell *matCellDef="let item">{{ item.email }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
+            <td mat-cell *matCellDef="let item">
+              <span class="status-badge" [ngClass]="'status-' + item.estado.toLowerCase()">
+                {{ item.estado }}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="fecha">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</th>
+            <td mat-cell *matCellDef="let item">{{ item.fecha | date:'dd/MM/yyyy' }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let item" class="actions">
+              <button mat-icon-button color="primary" (click)="openEditModal(item, editTpl)" title="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteItem(item.id, deleteTpl)" title="Eliminar">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator 
+          [pageSize]="5" 
+          [pageSizeOptions]="[5, 10, 20]" 
+          showFirstLastButtons>
+        </mat-paginator>
+      </div>
+
+      <!-- Loading Template -->
+      <ng-template #loadingTemplate>
+        <div class="loading-container">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p>Cargando datos de sensores...</p>
+        </div>
+      </ng-template>
+    </mat-card-content>
+  </mat-card>
+
+
+  <!-- Dialog Crear/Editar -->
+  <ng-template #createTpl>
+    <h2 mat-dialog-title>{{ isEditing ? 'Editar' : 'Crear' }} Registro</h2>
+    <mat-dialog-content class="dialog-content">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nombre</mat-label>
+        <input matInput [(ngModel)]="currentItem.nombre" required />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" [(ngModel)]="currentItem.email" required />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Estado</mat-label>
+        <mat-select [(ngModel)]="currentItem.estado">
+          <mat-option *ngFor="let estado of estados" [value]="estado">
+            {{ estado }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Fecha</mat-label>
+        <input matInput [matDatepicker]="picker" [(ngModel)]="currentItem.fecha" [min]="minDate" [max]="maxDate" required />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker [startAt]="getCurrentDate()"></mat-datepicker>
+      </mat-form-field>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end" class="dialog-actions">
+      <button mat-stroked-button color="primary" mat-dialog-close>Cancelar</button>
+      <button mat-raised-button color="primary" (click)="saveItem()">
+        {{ isEditing ? 'Actualizar' : 'Crear' }}
+      </button>
+    </mat-dialog-actions>
+  </ng-template>
+
+  <ng-template #editTpl>
+    <h2 mat-dialog-title>Editar Registro</h2>
+    <mat-dialog-content class="dialog-content">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nombre</mat-label>
+        <input matInput [(ngModel)]="currentItem.nombre" required />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" [(ngModel)]="currentItem.email" required />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Estado</mat-label>
+        <mat-select [(ngModel)]="currentItem.estado">
+          <mat-option *ngFor="let estado of estados" [value]="estado">
+            {{ estado }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Fecha</mat-label>
+        <input matInput [matDatepicker]="picker" [(ngModel)]="currentItem.fecha" [min]="minDate" [max]="maxDate" required />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker [startAt]="getCurrentDate()"></mat-datepicker>
+      </mat-form-field>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end" class="dialog-actions">
+      <button mat-stroked-button color="primary" mat-dialog-close>Cancelar</button>
+      <button mat-raised-button color="primary" (click)="saveItem()">Actualizar</button>
+    </mat-dialog-actions>
+  </ng-template>
+
+  <!-- Dialog Confirmar Eliminación -->
+  <ng-template #deleteTpl>
+    <h2 mat-dialog-title>Confirmar Eliminación</h2>
+    <mat-dialog-content>
+      <p>¿Estás seguro de eliminar el registro de <strong>{{ currentItem.nombre }}</strong>?</p>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close>Cancelar</button>
+      <button mat-raised-button color="warn" (click)="confirmDelete()">Eliminar</button>
+    </mat-dialog-actions>
+  </ng-template>
+</div>

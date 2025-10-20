@@ -1,0 +1,1470 @@
+/* Contenedor principal */
+.reports-container {
+  min-height: calc(100vh - 80px);
+  background: #f5f7fb;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow-y: auto;
+  padding-bottom: 4rem;
+}
+
+/* Header Card */
+.header-card {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 70%, #2563eb 100%) !important;
+  color: white !important;
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3) !important;
+  border-radius: 12px !important;
+  border: none !important;
+}
+
+/* Indicador de tiempo real */
+.realtime-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+.pulse-icon {
+  animation: pulse 2s infinite;
+  font-size: 1rem;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+:host ::ng-deep .header-card .mat-mdc-card-header {
+  display: flex !important;
+  align-items: center !important;
+  padding: 1.5rem !important;
+}
+
+.header-avatar {
+  background: rgba(255, 255, 255, 0.2) !important;
+  font-size: 2rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 60px !important;
+  height: 60px !important;
+  border-radius: 50% !important;
+  margin-right: 1rem !important;
+  flex-shrink: 0 !important;
+}
+
+.header-avatar mat-icon {
+  color: white !important;
+  font-size: 2rem !important;
+  width: 2rem !important;
+  height: 2rem !important;
+}
+
+:host ::ng-deep .header-card .mat-mdc-card-title {
+  color: white !important;
+  font-size: 1.8rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 0.5rem !important;
+}
+
+:host ::ng-deep .header-card .mat-mdc-card-subtitle {
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-size: 1rem !important;
+  margin: 0 !important;
+}
+
+/* Filtros Card */
+.filters-card {
+  background: #ffffff !important;
+  border: 1px solid #e6e8ee !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  border-radius: 12px !important;
+}
+
+.filters-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.filter-field {
+  min-width: 200px;
+  flex: 1;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+/* Métricas Card */
+.metrics-card {
+  background: #ffffff !important;
+  border: 1px solid #e6e8ee !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  border-radius: 12px !important;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.metric-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.metric-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.metric-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  background: #e5e7eb;
+}
+
+.metric-icon.active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.metric-icon.warning {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.metric-icon.inactive {
+  background: #fecaca;
+  color: #dc2626;
+}
+
+.metric-icon.alert {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.metric-icon.users {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.metric-content {
+  flex: 1;
+}
+
+.metric-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1;
+}
+
+.metric-label {
+  font-size: 0.9rem;
+  color: #6b7280;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Tabs Card */
+.tabs-card {
+  background: #ffffff !important;
+  border: 1px solid #e6e8ee !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  border-radius: 12px !important;
+  min-height: 600px;
+}
+
+.tab-content {
+  padding: 2rem;
+  min-height: 500px;
+}
+
+/* Sensores Status */
+.sensors-status-card {
+  margin-bottom: 1.5rem;
+}
+
+.sensors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.sensor-card {
+  border: 1px solid #e5e7eb !important;
+  transition: all 0.3s ease !important;
+}
+
+.sensor-card.status-active {
+  border-color: #10b981 !important;
+  background: #f0fdf4 !important;
+}
+
+.sensor-card.status-warning {
+  border-color: #f59e0b !important;
+  background: #fffbeb !important;
+}
+
+.sensor-card.status-inactive {
+  border-color: #ef4444 !important;
+  background: #fef2f2 !important;
+}
+
+.sensor-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.sensor-header mat-icon {
+  margin-right: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.sensor-info {
+  flex: 1;
+}
+
+.sensor-name {
+  font-weight: 600;
+  color: #111827;
+  font-size: 0.9rem;
+}
+
+.sensor-type {
+  color: #6b7280;
+  font-size: 0.8rem;
+}
+
+.sensor-value {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.unit {
+  font-size: 1rem;
+  color: #6b7280;
+  margin-left: 0.25rem;
+}
+
+.sensor-update {
+  font-size: 0.8rem;
+  color: #6b7280;
+  text-align: center;
+}
+
+/* Charts */
+/* Carrusel de gráficas */
+.charts-carousel {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.charts-carousel.slide-next .charts-container,
+.charts-carousel.slide-prev .charts-container {
+  transition: transform 250ms ease;
+}
+
+.charts-carousel.slide-next .charts-container {
+  transform: translateX(-20px);
+}
+
+.charts-carousel.slide-prev .charts-container {
+  transform: translateX(20px);
+}
+
+.charts-carousel .nav {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.charts-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(450px, 1fr));
+  gap: 2rem;
+  flex: 1;
+}
+
+.charts-container.enter-next .chart-card,
+.charts-container.enter-prev .chart-card {
+  animation-duration: 280ms;
+  animation-timing-function: cubic-bezier(0.2, 0.6, 0.2, 1);
+  animation-fill-mode: both;
+}
+
+.charts-container.enter-next .chart-card {
+  animation-name: chartFadeInRight;
+}
+
+.charts-container.enter-prev .chart-card {
+  animation-name: chartFadeInLeft;
+}
+
+@keyframes chartFadeInRight {
+  0% { opacity: 0; transform: translateX(24px) scale(0.98); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@keyframes chartFadeInLeft {
+  0% { opacity: 0; transform: translateX(-24px) scale(0.98); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+.chart-card {
+  border: 1px solid #e5e7eb !important;
+  border-radius: 14px !important;
+  overflow: hidden;
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
+  box-shadow: 0 10px 24px rgba(17, 24, 39, 0.06), 0 2px 6px rgba(17, 24, 39, 0.04);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.chart-card mat-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem !important;
+}
+
+.chart-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(17, 24, 39, 0.08), 0 4px 10px rgba(17, 24, 39, 0.06);
+}
+
+.chart-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.chart-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.chart-wrapper {
+  flex: 1;
+  background: linear-gradient(180deg, #f9fafb 0%, #f3f4f6 100%);
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 1rem;
+  min-height: 250px;
+}
+
+.chart-svg {
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+  background: radial-gradient(circle at 30% 20%, #ffffff 0%, #f8fafc 100%);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.chart-svg polyline {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.chart-svg circle {
+  transition: all 0.3s ease;
+}
+
+.chart-svg circle:hover {
+  r: 6;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+/* Chart Legend */
+.chart-legend {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #374151;
+  font-weight: 500;
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Chart header refinado */
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #eef2f7;
+  background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+}
+
+.chart-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.chart-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,0.25);
+}
+
+.chart-titles .mat-mdc-card-title {
+  font-size: 1rem !important;
+  margin: 0 !important;
+}
+
+.chart-titles .mat-mdc-card-subtitle {
+  margin: 0 !important;
+  color: #6b7280 !important;
+}
+
+.chart-header-right .chart-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  color: #0f172a;
+  background: #e2e8f0;
+  border-radius: 999px;
+  border: 1px solid #cbd5e1;
+}
+
+.data-points {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.data-point {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem 0.5rem;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.data-point:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.time {
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.value {
+  font-weight: 700;
+  color: #111827;
+  font-size: 0.9rem;
+}
+
+/* Alertas */
+.alerts-card {
+  border: 1px solid #e5e7eb !important;
+  background: #ffffff !important;
+}
+
+.alert-item {
+  border-bottom: 1px solid #f3f4f6 !important;
+  padding: 1.5rem 0 !important;
+  min-height: 100px !important;
+}
+
+.alert-item:last-child {
+  border-bottom: none !important;
+}
+
+:host ::ng-deep .alert-item .mat-mdc-list-item-content {
+  padding: 0 !important;
+  align-items: flex-start !important;
+  background: #ffffff !important;
+}
+
+:host ::ng-deep .alert-item:hover .mat-mdc-list-item-content {
+  background: #ffffff !important;
+}
+
+:host ::ng-deep .alert-item .mat-mdc-list-item-icon mat-icon {
+  color: inherit !important; /* usaremos getSeverityHex en el template */
+}
+
+/* Usuarios */
+.users-card {
+  border: 1px solid #e5e7eb !important;
+  min-height: 600px !important;
+}
+
+.users-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.stat-item mat-icon {
+  margin-right: 0.5rem;
+  color: #6b7280;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.user-item {
+  border: 2px solid #e5e7eb !important;
+  padding: 1.75rem !important;
+  min-height: 160px !important;
+  margin-bottom: 1.25rem !important;
+  background: #ffffff !important;
+  border-radius: 20px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+/* Efecto de partículas flotantes */
+.user-item::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.03) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+:host ::ng-deep .user-item:hover::after {
+  opacity: 1;
+}
+
+/* Borde superior con color de estado */
+.user-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #6b7280 0%, #9ca3af 100%);
+  border-radius: 16px 16px 0 0;
+}
+
+/* Borde superior para usuarios conectados */
+.user-item:has(.connected)::before {
+  background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+}
+
+/* Borde superior para usuarios desconectados */
+.user-item:has(.disconnected)::before {
+  background: linear-gradient(90deg, #ef4444 0%, #f87171 100%);
+}
+
+/* Hover para cards de usuarios con selectores más específicos */
+:host ::ng-deep .user-item:hover,
+:host ::ng-deep .user-item:hover .mat-mdc-list-item,
+:host ::ng-deep .user-item:hover .mat-mdc-list-item-content {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+  background-color: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+/* Selectores globales adicionales */
+.mat-mdc-list-item.user-item:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+  background-color: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+/* Selector ultra específico */
+:host ::ng-deep .users-card .mat-mdc-list .mat-mdc-list-item.user-item:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+  background-color: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+/* Forzar hover con selectores de Angular Material */
+:host ::ng-deep .mat-mdc-list-item.user-item:hover .mat-mdc-list-item-content {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+  background-color: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+/* Selector con máxima especificidad */
+:host ::ng-deep .reports-container .tabs-card .tab-content .users-card .mat-mdc-list .mat-mdc-list-item.user-item:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+  background-color: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+/* Hover elegante para cards de usuarios */
+:host ::ng-deep .user-item:hover,
+:host ::ng-deep .mat-mdc-list-item.user-item:hover {
+  transform: translateY(-4px) scale(1.02) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(59, 130, 246, 0.1) !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+  border: 2px solid #cbd5e1 !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+.user-item:last-child {
+  border-bottom: none !important;
+  margin-bottom: 0 !important;
+}
+
+:host ::ng-deep .user-item .mat-mdc-list-item-content {
+  padding: 0 !important;
+  align-items: flex-start !important;
+  display: flex !important;
+  flex-direction: row !important;
+  width: 100% !important;
+  gap: 1.5rem !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+  position: relative !important;
+}
+
+/* Contenedor principal de datos */
+:host ::ng-deep .user-item .mat-mdc-list-item-text {
+  flex: 1 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  max-width: calc(100% - 4rem) !important;
+  gap: 0.75rem !important;
+}
+
+:host ::ng-deep .user-item .mat-mdc-list-item-text {
+  flex: 1 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  max-width: calc(100% - 4rem) !important;
+}
+
+:host ::ng-deep .user-item .mat-mdc-list-item-title {
+  font-size: 1.5rem !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  margin-bottom: 0.75rem !important;
+  line-height: 1.3 !important;
+  width: 100% !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  white-space: normal !important;
+  padding: 1rem 1.25rem !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+  border-radius: 12px !important;
+  border: 2px solid #e2e8f0 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Efecto de brillo en el título */
+:host ::ng-deep .user-item .mat-mdc-list-item-title::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.6s ease;
+}
+
+:host ::ng-deep .user-item:hover .mat-mdc-list-item-title::before {
+  left: 100%;
+}
+
+:host ::ng-deep .user-item:hover .mat-mdc-list-item-title {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  border-color: #cbd5e1 !important;
+}
+
+:host ::ng-deep .user-item .mat-mdc-list-item-line {
+  font-size: 1rem !important;
+  color: #374151 !important;
+  margin-bottom: 0.75rem !important;
+  line-height: 1.6 !important;
+  width: 100% !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  white-space: normal !important;
+  padding: 0.875rem 1.125rem !important;
+  background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%) !important;
+  border: 1.5px solid #e5e7eb !important;
+  border-radius: 10px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.7) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Efecto de hover más sofisticado */
+:host ::ng-deep .user-item .mat-mdc-list-item-line:hover {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Efecto de pulso sutil */
+:host ::ng-deep .user-item .mat-mdc-list-item-line::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(59, 130, 246, 0.05) 50%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+:host ::ng-deep .user-item .mat-mdc-list-item-line:hover::after {
+  opacity: 1;
+}
+
+:host ::ng-deep .user-item .mat-mdc-list-item-line:last-child {
+  margin-bottom: 0 !important;
+}
+
+:host ::ng-deep .user-item .mat-mdc-list-item-icon {
+  margin-right: 1.5rem !important;
+  margin-top: 0.5rem !important;
+  flex-shrink: 0 !important;
+  font-size: 2.75rem !important;
+  width: 3.5rem !important;
+  height: 3.5rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+  border: 3px solid #e2e8f0 !important;
+  border-radius: 50% !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+  color: #6b7280 !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Estilos para el avatar del usuario */
+:host ::ng-deep .user-item .user-avatar {
+  margin-right: 1.5rem !important;
+  margin-top: 0.5rem !important;
+  flex-shrink: 0 !important;
+  width: 3.5rem !important;
+  height: 3.5rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+  border: 3px solid #e2e8f0 !important;
+  border-radius: 50% !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+:host ::ng-deep .user-item .user-avatar mat-icon {
+  font-size: 2.75rem !important;
+  color: #6b7280 !important;
+  width: 2.75rem !important;
+  height: 2.75rem !important;
+}
+
+:host ::ng-deep .user-item .user-avatar .user-image {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  border: none !important;
+  image-rendering: -webkit-optimize-contrast !important;
+  image-rendering: crisp-edges !important;
+}
+
+/* Asegurar que el avatar se muestre correctamente */
+:host ::ng-deep .user-item .user-avatar[matListItemIcon] {
+  margin-right: 1.5rem !important;
+  margin-top: 0.5rem !important;
+  flex-shrink: 0 !important;
+  width: 3.5rem !important;
+  height: 3.5rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+  border: 3px solid #e2e8f0 !important;
+  border-radius: 50% !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Efecto de brillo en el icono */
+:host ::ng-deep .user-item .mat-mdc-list-item-icon::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(from 0deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  animation: rotate 3s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+:host ::ng-deep .user-item:hover .mat-mdc-list-item-icon {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+  border-color: #3b82f6 !important;
+  color: #1d4ed8 !important;
+  transform: scale(1.05) !important;
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+:host ::ng-deep .user-item:hover .mat-mdc-list-item-icon::before {
+  opacity: 1;
+}
+
+/* Estilos para el correo electrónico */
+:host ::ng-deep .user-item .email-info {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.375rem !important;
+  padding: 0.25rem 0.75rem !important;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%) !important;
+  border: 1.5px solid #bae6fd !important;
+  border-radius: 6px !important;
+  box-shadow: 0 1px 4px rgba(14, 165, 233, 0.1) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  font-size: 0.875rem !important;
+  color: #0369a1 !important;
+  font-weight: 500 !important;
+  margin-bottom: 0.5rem !important;
+  position: relative !important;
+  overflow: hidden !important;
+  max-width: fit-content !important;
+  height: 2rem !important;
+}
+
+:host ::ng-deep .user-item .email-icon {
+  font-size: 1rem !important;
+  color: #0284c7 !important;
+  transition: all 0.3s ease !important;
+}
+
+:host ::ng-deep .user-item:hover .email-info {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2) !important;
+  transform: translateY(-1px) !important;
+}
+
+:host ::ng-deep .user-item:hover .email-icon {
+  color: #1d4ed8 !important;
+  transform: scale(1.1) !important;
+}
+
+/* Efecto de brillo en el correo */
+:host ::ng-deep .user-item .email-info::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s ease;
+}
+
+:host ::ng-deep .user-item:hover .email-info::before {
+  left: 100%;
+}
+
+/* Estilos para el filtro de usuarios */
+.users-filter-section {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 1.5rem !important;
+  padding: 1rem !important;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+}
+
+.users-filter-field {
+  min-width: 200px !important;
+  margin-right: 1rem !important;
+}
+
+.users-filter-field .mat-mdc-form-field {
+  font-size: 0.9rem !important;
+}
+
+.users-filter-field .mat-mdc-select {
+  color: #374151 !important;
+  font-weight: 500 !important;
+}
+
+.users-filter-field .mat-mdc-form-field-outline {
+  color: #cbd5e1 !important;
+}
+
+.users-filter-field .mat-mdc-form-field-outline-thick {
+  color: #3b82f6 !important;
+}
+
+.users-filter-info {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+.filter-count {
+  font-size: 0.875rem !important;
+  color: #6b7280 !important;
+  font-weight: 500 !important;
+  padding: 0.5rem 1rem !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%) !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Responsive para el filtro */
+@media (max-width: 768px) {
+  .users-filter-section {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 1rem !important;
+  }
+  
+  .users-filter-field {
+    margin-right: 0 !important;
+    min-width: 100% !important;
+  }
+  
+  .users-filter-info {
+    justify-content: center !important;
+  }
+}
+
+/* Temporal */
+.temporal-card {
+  border: 1px solid #e5e7eb !important;
+}
+
+.temporal-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.temporal-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.temporal-item mat-icon {
+  margin-right: 0.5rem;
+  color: #6b7280;
+  font-size: 1.5rem;
+}
+
+.temporal-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.temporal-label {
+  font-size: 0.8rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.comparison-chart {
+  margin-top: 1.5rem;
+}
+
+.comparison-chart h3 {
+  color: #111827;
+  margin-bottom: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .reports-container {
+    padding: 1rem;
+    gap: 1rem;
+  }
+  
+  .filters-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .filter-field {
+    min-width: auto;
+  }
+  
+  .actions {
+    margin-left: 0;
+    justify-content: center;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .sensors-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .charts-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .users-stats,
+  .temporal-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .metric-item {
+    padding: 0.75rem;
+  }
+  
+  .metric-value {
+    font-size: 1.5rem;
+  }
+}
+
+/* Estilos para alertas */
+.no-alerts {
+  text-align: center;
+  padding: 2rem;
+  color: #4caf50;
+}
+
+.no-alerts mat-icon {
+  font-size: 3rem;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 1rem;
+}
+
+.no-alerts p {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+/* Loader centrado para alertas */
+.alerts-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 0;
+}
+
+/* Notificaciones (admin) */
+.notif-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.notif-filters {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1rem;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.notif-toolbar .spacer { flex: 1; }
+
+.table-wrapper {
+  overflow: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.notif-table {
+  width: 100%;
+  min-width: 900px;
+}
+
+/* Acciones: colores de iconos */
+/* Acciones: replicar estilo de admin-data */
+.notif-table .action-btn.edit mat-icon { color: #1976d2; }
+.notif-table .action-btn.edit:hover mat-icon { color: #0d47a1; }
+.notif-table .action-btn.delete mat-icon { color: #e53935; }
+.notif-table .action-btn.delete:hover mat-icon { color: #b71c1c; }
+
+/* Colores de fila por tipo */
+.notif-table .row-info {
+  background: #e8f0fe; /* azul claro */
+}
+
+.notif-table .row-warning {
+  background: #fff8db; /* amarillo claro */
+}
+
+.notif-table .row-danger {
+  background: #ffe5e5; /* rojo claro */
+}
+
+.cell-input {
+  width: 100%;
+}
+
+.cell-input.small {
+  max-width: 120px;
+}
+
+.cell-select { width: 140px; }
+
+/* Badges de lectura */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+.badge-sensor { background:#eef2ff; color:#1e3a8a; border-color:#c7d2fe; }
+.badge-estado-bueno { background:#dcfce7; color:#065f46; border-color:#a7f3d0; }
+.badge-estado-advertencia { background:#fef3c7; color:#92400e; border-color:#fde68a; }
+.badge-estado-malo { background:#fee2e2; color:#991b1b; border-color:#fecaca; }
+.badge-estado-desconectado { background:#e5e7eb; color:#374151; border-color:#d1d5db; }
+.badge-tipo-info { background:#e0f2fe; color:#075985; border-color:#bae6fd; }
+.badge-tipo-warning { background:#fff7ed; color:#9a3412; border-color:#fed7aa; }
+.badge-tipo-danger { background:#fee2e2; color:#991b1b; border-color:#fecaca; }
+
+/* Tooltip personalizado para alertas */
+:host ::ng-deep .alert-tooltip {
+  /* Mismo tono claro del contenedor de alerta */
+  background: #f1f6fb !important;
+  color: #111827 !important; /* texto casi negro */
+  border-radius: 12px !important;
+  padding: 14px 16px !important;
+  box-shadow: 0 10px 28px rgba(17, 24, 39, 0.10) !important;
+  border: 1px solid #e5e7eb !important;
+  max-width: 420px !important;
+  font-weight: 600 !important;
+  font-size: 0.98rem !important;
+  line-height: 1.4 !important;
+}
+
+:host ::ng-deep .alert-tooltip .mdc-tooltip__surface {
+  background: transparent !important;
+  color: inherit !important;
+}
+
+/* (revert) sin estilos de menú-tooltip */
+
+/* Estilos para estado de conexión */
+.connected {
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.disconnected {
+  color: #f44336;
+  font-weight: 500;
+}
+
+/* Estilos para paginación de usuarios */
+.pagination-controls {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.pagination-info {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.pagination-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.page-numbers {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.page-numbers button {
+  min-width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.page-numbers button.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.page-numbers button:not(.active):hover {
+  background-color: #e9ecef;
+}
+
+.pagination-buttons button[mat-button] {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.pagination-buttons button[mat-button]:not([disabled]):hover {
+  background-color: #e9ecef;
+}
+
+.pagination-buttons button[mat-button][disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Forzar estilos en listas de alertas (quitar hover azul y colores blancos) */
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item,
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item .mdc-list-item__content {
+  background: #ffffff !important;
+}
+
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item:hover,
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item .mdc-list-item__content:hover {
+  background: #ffffff !important;
+}
+
+/* Evitar que el área del icono ponga fondos o fuerce color */
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item [matListItemIcon],
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item .mat-mdc-list-item-icon {
+  background: transparent !important;
+}
+
+/* Permitir que el color inline de Angular (ngStyle) domine */
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item mat-icon {
+  color: inherit !important;
+  fill: currentColor !important;
+}
+
+/* Asegurar que el texto no cambie a blanco por temas */
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item .mat-mdc-list-item-title,
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item .mat-mdc-list-item-line {
+  color: #111827 !important;
+}
+
+/* Forzar que el icono mantenga el color también en hover */
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item:hover mat-icon,
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item .mdc-list-item__content:hover mat-icon {
+  color: inherit !important;
+  fill: currentColor !important;
+}
+
+/* Colores por severidad para iconos */
+.sev-bueno { color: #2e7d32 !important; fill: #2e7d32 !important; }
+.sev-advertencia { color: #f59e0b !important; fill: #f59e0b !important; }
+.sev-malo { color: #d32f2f !important; fill: #d32f2f !important; }
+
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item:hover .sev-bueno,
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item:hover .sev-advertencia,
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item:hover .sev-malo {
+  color: inherit !important;
+  fill: currentColor !important;
+}
+
+/* Quitar reglas anteriores que heredaban el color */
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item mat-icon {
+  color: unset !important;
+  fill: unset !important;
+}
+
+/* Forzar colores por severidad con alta especificidad */
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item .mat-mdc-list-item-icon mat-icon.sev-bueno,
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item mat-icon.sev-bueno {
+  color: #2e7d32 !important;
+  fill: #2e7d32 !important;
+}
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item .mat-mdc-list-item-icon mat-icon.sev-advertencia,
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item mat-icon.sev-advertencia {
+  color: #f59e0b !important;
+  fill: #f59e0b !important;
+}
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item .mat-mdc-list-item-icon mat-icon.sev-malo,
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item mat-icon.sev-malo {
+  color: #d32f2f !important;
+  fill: #d32f2f !important;
+}
+
+/* Mantener color también en hover */
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item:hover .mat-mdc-list-item-icon mat-icon.sev-bueno,
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item:hover mat-icon.sev-bueno {
+  color: #2e7d32 !important;
+  fill: #2e7d32 !important;
+}
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item:hover .mat-mdc-list-item-icon mat-icon.sev-advertencia,
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item:hover mat-icon.sev-advertencia {
+  color: #f59e0b !important;
+  fill: #f59e0b !important;
+}
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item:hover .mat-mdc-list-item-icon mat-icon.sev-malo,
+:host ::ng-deep .alerts-card .mat-mdc-list .mat-mdc-list-item:hover mat-icon.sev-malo {
+  color: #d32f2f !important;
+  fill: #d32f2f !important;
+}

@@ -1,0 +1,239 @@
+<div class="admin-users-bg">
+  <div class="admin-users-container">
+    <!-- Header Section -->
+    <mat-card class="header-card">
+      <mat-card-header>
+        <div class="header-avatar">
+          <mat-icon>group</mat-icon>
+        </div>
+        <div>
+          <mat-card-title>Gestión de Usuarios</mat-card-title>
+          <mat-card-subtitle>Administra los usuarios del sistema</mat-card-subtitle>
+        </div>
+      </mat-card-header>
+    </mat-card>
+
+    <!-- Actions Section -->
+    <mat-card class="actions-card">
+      <mat-card-content>
+        <div class="actions-container">
+          <div class="search-section">
+            <mat-form-field appearance="outline" class="search-field">
+              <mat-label>Buscar usuarios</mat-label>
+              <input matInput [(ngModel)]="searchTerm" (ngModelChange)="filtrarUsuarios()" placeholder="Nombre, email o rol">
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+          </div>
+          
+          <div class="stats-section">
+            <div class="user-count">
+              <mat-icon>people</mat-icon>
+              <span>{{ getTotalUsers() }} usuarios</span>
+            </div>
+            <div class="admin-count">
+              <mat-icon>admin_panel_settings</mat-icon>
+              <span>{{ getAdminUsers() }} administradores</span>
+            </div>
+          </div>
+
+          <div class="button-section">
+            <button mat-raised-button class="create-btn gradient-btn" (click)="abrirCrearModal(createTpl)">
+              <mat-icon>person_add</mat-icon>
+              <span>Nuevo Usuario</span>
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Table Section -->
+    <mat-card class="table-card">
+      <mat-card-content>
+        <!-- Loading Spinner -->
+        <div class="loading-container" *ngIf="isLoading">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p>Cargando usuarios...</p>
+        </div>
+
+        <!-- Table -->
+        <div class="table-container" *ngIf="!isLoading">
+          <table mat-table [dataSource]="dataSource" matSort class="users-table">
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+              <td mat-cell *matCellDef="let usuario">{{ usuario.id }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="nombre">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+              <td mat-cell *matCellDef="let usuario">{{ usuario.nombre }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+              <td mat-cell *matCellDef="let usuario">{{ usuario.email }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="rol">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Rol</th>
+              <td mat-cell *matCellDef="let usuario">
+                <span class="role-badge" [class.admin-role]="usuario.rol === 'admin'">
+                  {{ usuario.rol === 'admin' ? 'Admin' : 'Usuario' }}
+                </span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sensores">
+              <th mat-header-cell *matHeaderCellDef>Sensores</th>
+              <td mat-cell *matCellDef="let usuario" class="sensores-cell clickable" (click)="abrirGestionarSensores(usuario, sensoresTpl)" aria-label="Gestionar sensores del usuario" title="Gestionar sensores">
+                <div class="sensores-chips">
+                  <mat-chip-set>
+                    <mat-chip *ngFor="let sensor of getSensoresAsignados(usuario.id)" 
+                              [class.assigned]="true"
+                              [class.mq135]="sensor.codigo === 'mq135'"
+                              [class.mq4]="sensor.codigo === 'mq4'"
+                              [class.mq7]="sensor.codigo === 'mq7'">
+                      {{ sensor.nombre }}
+                    </mat-chip>
+                    <mat-chip *ngIf="getSensoresAsignados(usuario.id).length === 0" class="no-sensors">
+                      Sin sensores
+                    </mat-chip>
+                  </mat-chip-set>
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef>Acciones</th>
+              <td mat-cell *matCellDef="let usuario" class="actions-cell">
+                <button mat-icon-button color="primary" class="edit-action-btn" (click)="abrirEditarModal(usuario, editTpl)" title="Editar">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="accent" class="sensors-action-btn" (click)="abrirGestionarSensores(usuario, sensoresTpl)" title="Gestionar Sensores">
+                  <mat-icon>sensors</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" class="delete-action-btn" (click)="abrirEliminarConfirm(usuario)" title="Eliminar">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+          <mat-paginator 
+            [pageSize]="5" 
+            [pageSizeOptions]="[5, 10, 20]" 
+            showFirstLastButtons
+            (page)="onPageChange($event)">
+          </mat-paginator>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<!-- Dialog Crear Usuario -->
+<ng-template #createTpl>
+  <h2 mat-dialog-title>
+    <mat-icon class="dialog-title-icon">person_add</mat-icon>
+    Nuevo Usuario
+  </h2>
+  <mat-dialog-content class="dialog-content">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Nombre</mat-label>
+      <input matInput [(ngModel)]="formData.nombre" />
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" [(ngModel)]="formData.email" />
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Contraseña</mat-label>
+      <input matInput type="password" [(ngModel)]="formData.password" />
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Rol</mat-label>
+      <mat-select [(ngModel)]="formData.rol">
+        <mat-option value="usuario">Usuario</mat-option>
+        <mat-option value="admin">Administrador</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-stroked-button color="primary" mat-dialog-close>Cancelar</button>
+    <button mat-raised-button color="primary" (click)="crearUsuario()">Crear</button>
+  </mat-dialog-actions>
+  </ng-template>
+
+<!-- Dialog Editar Usuario -->
+<ng-template #editTpl>
+  <h2 mat-dialog-title>Editar Usuario</h2>
+  <mat-dialog-content class="dialog-content">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre</mat-label>
+      <input matInput [(ngModel)]="formData.nombre" />
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" [(ngModel)]="formData.email" />
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Contraseña (dejar vacío para no cambiar)</mat-label>
+      <input matInput type="password" [(ngModel)]="formData.password" />
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Rol</mat-label>
+      <mat-select [(ngModel)]="formData.rol">
+        <mat-option value="usuario">Usuario</mat-option>
+        <mat-option value="admin">Administrador</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-stroked-button color="primary" mat-dialog-close>Cancelar</button>
+    <button mat-raised-button color="primary" (click)="actualizarUsuario()">Actualizar</button>
+  </mat-dialog-actions>
+</ng-template>
+
+<!-- Dialog Gestionar Sensores -->
+<ng-template #sensoresTpl>
+  <h2 mat-dialog-title>Gestionar Sensores - {{ selectedUsuario?.nombre }}</h2>
+  <mat-dialog-content class="dialog-content">
+    <p class="dialog-description">Selecciona los sensores que tendrá acceso este usuario:</p>
+    
+    <div class="sensores-list">
+      <mat-card *ngFor="let sensor of sensoresDisponibles" class="sensor-card">
+        <mat-card-content>
+          <div class="sensor-content">
+            <div class="sensor-info">
+              <mat-icon class="sensor-icon" 
+                        [class.mq135-icon]="sensor.codigo === 'mq135'"
+                        [class.mq4-icon]="sensor.codigo === 'mq4'"
+                        [class.mq7-icon]="sensor.codigo === 'mq7'">
+                {{ getSensorIcon(sensor.codigo) }}
+              </mat-icon>
+              <div class="sensor-details">
+                <h3 class="sensor-name">{{ sensor.nombre }}</h3>
+                <p class="sensor-description">{{ sensor.descripcion }}</p>
+              </div>
+            </div>
+            <mat-slide-toggle 
+              [(ngModel)]="sensor.asignado"
+              (change)="onSensorToggle(sensor)"
+              color="primary">
+              {{ sensor.asignado ? 'Asignado' : 'No asignado' }}
+            </mat-slide-toggle>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-stroked-button color="primary" mat-dialog-close>Cancelar</button>
+    <button mat-raised-button color="primary" (click)="guardarSensores()" [disabled]="isLoadingSensores">
+      <mat-spinner *ngIf="isLoadingSensores" diameter="20"></mat-spinner>
+      <span *ngIf="!isLoadingSensores">Guardar Cambios</span>
+    </button>
+  </mat-dialog-actions>
+</ng-template>
+

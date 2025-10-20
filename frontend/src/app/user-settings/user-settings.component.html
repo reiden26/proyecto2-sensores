@@ -1,0 +1,755 @@
+<div class="settings-container">
+  <div class="settings-content">
+    <!-- Admin Profile Header -->
+    <mat-card class="admin-profile-header" *ngIf="rol === 'admin'">
+      <div class="profile-content">
+        <div class="profile-avatar admin-avatar clickable-avatar" (click)="abrirModalImagen()">
+          <img *ngIf="usuario?.imagen_url" [src]="usuario.imagen_url" [alt]="usuario.nombre" class="profile-image">
+          <mat-icon *ngIf="!usuario?.imagen_url" class="avatar-icon">admin_panel_settings</mat-icon>
+          <div class="edit-overlay">
+            <mat-icon>edit</mat-icon>
+          </div>
+        </div>
+        <div class="profile-info">
+          <h2 class="profile-name">{{ nombre || 'Administrador' }}</h2>
+          <p class="profile-email">{{ email }}</p>
+          <div class="profile-badges">
+            <span class="admin-badge">
+              <mat-icon>verified</mat-icon>
+              Administrador del Sistema
+            </span>
+            <span class="status-badge active">
+              <mat-icon>check_circle</mat-icon>
+              Activo
+            </span>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+
+    
+
+    <!-- User Profile Header -->
+    <div class="profile-header" *ngIf="rol !== 'admin'">
+      <div class="profile-avatar user-avatar clickable-avatar" (click)="abrirModalImagen()">
+        <img *ngIf="usuario?.imagen_url" [src]="usuario.imagen_url" [alt]="usuario.nombre" class="profile-image">
+        <mat-icon *ngIf="!usuario?.imagen_url" class="avatar-icon">person</mat-icon>
+        <div class="edit-overlay">
+          <mat-icon>edit</mat-icon>
+        </div>
+      </div>
+      <div class="profile-info">
+        <h2 class="profile-name">{{ nombre || 'Usuario' }}</h2>
+        <p class="profile-email">{{ email }}</p>
+        <div class="profile-badges">
+          <span class="role-badge">
+            {{ getTipoCuenta() }}
+          </span>
+          <span class="status-badge">Activo</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Personal Information Card -->
+    <mat-card class="admin-card personal-settings">
+      <mat-card-header>
+        <div class="card-header-icon" [class.admin-icon]="rol === 'admin'">
+          <mat-icon>person</mat-icon>
+        </div>
+        <div class="card-header-content">
+          <mat-card-title>Información Personal</mat-card-title>
+          <mat-card-subtitle>Actualiza tu información personal</mat-card-subtitle>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="personal-info-section">
+          <div class="personal-header">
+            <div class="personal-icon" [class.admin-icon]="rol === 'admin'">
+              <mat-icon>account_circle</mat-icon>
+            </div>
+            <div class="personal-info">
+              <h3>Datos del Perfil</h3>
+              <p>Actualiza tu informacion</p>
+            </div>
+          </div>
+          
+          <div class="personal-form">
+            <!-- Nombre completo -->
+            <div class="personal-field-group">
+              <div class="field-display" *ngIf="!isEditingName" [class.admin-field]="rol === 'admin'">
+                <div class="field-info">
+                  <div class="field-label">
+                    <mat-icon>person</mat-icon>
+                    <span>Nombre completo</span>
+                  </div>
+                  <div class="field-value">{{ nombre || 'No especificado' }}</div>
+                  <div class="field-hint">Este nombre será visible para otros usuarios del sistema</div>
+                </div>
+                <button mat-icon-button (click)="startEditingName()" class="edit-button" [class.admin-edit-button]="rol === 'admin'">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </div>
+              
+              <div class="field-edit" *ngIf="isEditingName">
+                <mat-form-field appearance="outline" class="personal-field">
+                  <mat-label>Nombre completo</mat-label>
+                  <input matInput 
+                    [(ngModel)]="nombre" 
+                    placeholder="Ingresa tu nombre completo"
+                    [class.error]="personalError"
+                    maxlength="100">
+                  <mat-icon matSuffix>person</mat-icon>
+                  <mat-hint>Este nombre será visible para otros usuarios del sistema</mat-hint>
+                  <mat-hint align="end">{{ (nombre || '').length }}/100</mat-hint>
+                </mat-form-field>
+                <div class="edit-actions">
+                  <button mat-stroked-button (click)="cancelEditingName()" [disabled]="isLoading">
+                    <mat-icon>close</mat-icon>
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Correo electrónico -->
+            <div class="personal-field-group">
+              <div class="field-display" [class.admin-field]="rol === 'admin'">
+                <div class="field-info">
+                  <div class="field-label">
+                    <mat-icon>email</mat-icon>
+                    <span>Correo electrónico</span>
+                  </div>
+                  <div class="field-value">{{ email }}</div>
+                  <div class="field-hint">El correo electrónico no se puede modificar</div>
+                </div>
+                <button mat-icon-button disabled class="edit-button">
+                  <mat-icon>lock</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <!-- Rol de usuario -->
+            <div class="personal-field-group">
+              <div class="field-display" [class.admin-field]="rol === 'admin'">
+                <div class="field-info">
+                  <div class="field-label">
+                    <mat-icon>verified_user</mat-icon>
+                    <span>Rol de usuario</span>
+                  </div>
+                  <div class="field-value">{{ getTipoCuenta() }}</div>
+                  <div class="field-hint">Tu rol en el sistema está asignado por el administrador</div>
+                </div>
+                <button mat-icon-button disabled class="edit-button">
+                  <mat-icon>lock</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <!-- User ID Display -->
+            <div class="user-id-display" *ngIf="userId">
+              <div class="id-info">
+                <mat-icon>fingerprint</mat-icon>
+                <span>ID de Usuario: <strong>{{ userId }}</strong></span>
+              </div>
+            </div>
+
+            <!-- Error Message -->
+            <div class="personal-error" *ngIf="personalError">
+              <mat-icon>error</mat-icon>
+              <span>{{ personalError }}</span>
+            </div>
+
+            <!-- Success Message -->
+            <div class="personal-success" *ngIf="personalSuccess">
+              <mat-icon>check_circle</mat-icon>
+              <span>{{ personalSuccess }}</span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-card-actions align="end" *ngIf="isEditingName">
+        <button mat-stroked-button (click)="clearPersonalForm()" [disabled]="isLoading">
+          <mat-icon>refresh</mat-icon>
+          Restaurar
+        </button>
+        <button mat-raised-button color="primary" (click)="savePersonalInfo()" [disabled]="isLoading || !isPersonalFormValid()">
+          <mat-icon>save</mat-icon>
+          Guardar Información
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Admin: Configuración de alertas -->
+    <mat-card class="admin-card notification-settings" *ngIf="rol === 'admin'">
+      <mat-card-header>
+        <div class="card-header-icon">
+          <mat-icon>tune</mat-icon>
+        </div>
+        <div class="card-header-content">
+          <mat-card-title>Configuración de alertas</mat-card-title>
+          <mat-card-subtitle>Umbrales, severidades incluidas y volumen mínimo</mat-card-subtitle>
+        </div>
+        <div class="header-actions" style="margin-left:auto; display:flex; gap:.5rem;">
+          <button mat-stroked-button color="primary" *ngIf="!isEditingAlerts" (click)="startEditAlerts()">
+            <mat-icon>edit</mat-icon>
+            Editar
+          </button>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="settings-grid">
+          <!-- MQ-135 -->
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4>MQ-135 (Calidad del aire)</h4>
+              <p>Define umbrales y (opcional) valor de trigger</p>
+            </div>
+            <div class="setting-control" style="display:grid; grid-template-columns: repeat(3, minmax(160px, 1fr)); gap:12px;">
+              <mat-form-field appearance="outline">
+                <mat-label>Advertencia (ppm)</mat-label>
+                <input matInput type="number" [(ngModel)]="alertsConfig.mq135_warning_threshold" [disabled]="!isEditingAlerts" />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Malo (ppm)</mat-label>
+                <input matInput type="number" [(ngModel)]="alertsConfig.mq135_bad_threshold" [disabled]="!isEditingAlerts" />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Trigger (valor exacto)</mat-label>
+                <input matInput type="number" [(ngModel)]="alertsConfig.mq135_trigger_valor" [disabled]="!isEditingAlerts" />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Tipo de trigger</mat-label>
+                <mat-select [(ngModel)]="alertsConfig.mq135_trigger_tipo" [disabled]="!isEditingAlerts">
+                  <mat-option value="igual">Igual</mat-option>
+                  <mat-option value="mayor_igual">Mayor o igual</mat-option>
+                  <mat-option value="menor_igual">Menor o igual</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- MQ-4 -->
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4>MQ-4 (Metano)</h4>
+            </div>
+            <div class="setting-control" style="display:grid; grid-template-columns: repeat(3, minmax(160px, 1fr)); gap:12px;">
+              <mat-form-field appearance="outline">
+                <mat-label>Advertencia (ppm)</mat-label>
+                <input matInput type="number" [(ngModel)]="alertsConfig.mq4_warning_threshold" [disabled]="!isEditingAlerts" />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Malo (ppm)</mat-label>
+                <input matInput type="number" [(ngModel)]="alertsConfig.mq4_bad_threshold" [disabled]="!isEditingAlerts" />
+              </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Trigger (valor exacto)</mat-label>
+                  <input matInput type="number" [(ngModel)]="alertsConfig.mq4_trigger_valor" [disabled]="!isEditingAlerts" />
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Tipo de trigger</mat-label>
+                  <mat-select [(ngModel)]="alertsConfig.mq4_trigger_tipo" [disabled]="!isEditingAlerts">
+                    <mat-option value="igual">Igual</mat-option>
+                    <mat-option value="mayor_igual">Mayor o igual</mat-option>
+                    <mat-option value="menor_igual">Menor o igual</mat-option>
+                  </mat-select>
+                </mat-form-field>
+            </div>
+          </div>
+
+          <!-- MQ-7 -->
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4>MQ-7 (Monóxido de carbono)</h4>
+            </div>
+            <div class="setting-control" style="display:grid; grid-template-columns: repeat(3, minmax(160px, 1fr)); gap:12px;">
+              <mat-form-field appearance="outline">
+                <mat-label>Advertencia (ppm)</mat-label>
+                <input matInput type="number" [(ngModel)]="alertsConfig.mq7_warning_threshold" [disabled]="!isEditingAlerts" />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Malo (ppm)</mat-label>
+                <input matInput type="number" [(ngModel)]="alertsConfig.mq7_bad_threshold" [disabled]="!isEditingAlerts" />
+              </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Trigger (valor exacto)</mat-label>
+                  <input matInput type="number" [(ngModel)]="alertsConfig.mq7_trigger_valor" [disabled]="!isEditingAlerts" />
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Tipo de trigger</mat-label>
+                  <mat-select [(ngModel)]="alertsConfig.mq7_trigger_tipo" [disabled]="!isEditingAlerts">
+                    <mat-option value="igual">Igual</mat-option>
+                    <mat-option value="mayor_igual">Mayor o igual</mat-option>
+                    <mat-option value="menor_igual">Menor o igual</mat-option>
+                  </mat-select>
+                </mat-form-field>
+            </div>
+          </div>
+
+        </div>
+      </mat-card-content>
+      <mat-card-actions align="end" *ngIf="isEditingAlerts">
+        <button mat-stroked-button (click)="cancelEditAlerts()">
+          <mat-icon>close</mat-icon>
+          Cancelar
+        </button>
+        <button mat-raised-button color="primary" (click)="saveAlertsConfig()" [disabled]="isSavingAlerts">
+          <mat-icon>save</mat-icon>
+          Guardar Configuración de Alertas
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Security Settings Card -->
+    <mat-card class="admin-card security-settings">
+      <mat-card-header>
+        <div class="card-header-icon">
+          <mat-icon>security</mat-icon>
+        </div>
+        <div class="card-header-content">
+          <mat-card-title>Configuración de Seguridad</mat-card-title>
+          <mat-card-subtitle>Gestiona tu contraseña y sesión</mat-card-subtitle>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="password-change-section">
+          <div class="password-header">
+            <div class="password-icon">
+              <mat-icon>lock</mat-icon>
+            </div>
+            <div class="password-info">
+              <h3>Cambiar Contraseña</h3>
+              <p>Mantén tu cuenta segura con una contraseña fuerte</p>
+            </div>
+          </div>
+          
+          <div class="password-form">
+            <div class="password-field-group">
+              <mat-form-field appearance="outline" class="password-field">
+                <mat-label>Contraseña actual</mat-label>
+                <input matInput 
+                  [type]="showCurrentPassword ? 'text' : 'password'" 
+                  [(ngModel)]="passwordActual" 
+                  placeholder="Ingresa tu contraseña actual"
+                  [class.error]="passwordError">
+                <button mat-icon-button matSuffix 
+                  (click)="toggleCurrentPasswordVisibility()"
+                  [disabled]="isLoading"
+                  type="button"
+                  matTooltip="Mostrar/Ocultar contraseña">
+                  <mat-icon>{{ showCurrentPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+                <mat-hint>Ingresa tu contraseña actual para verificar tu identidad</mat-hint>
+              </mat-form-field>
+            </div>
+
+            <div class="password-field-group">
+              <mat-form-field appearance="outline" class="password-field">
+                <mat-label>Nueva contraseña</mat-label>
+                <input matInput 
+                  [type]="showNewPassword ? 'text' : 'password'" 
+                  [(ngModel)]="passwordNueva" 
+                  placeholder="Mínimo 6 caracteres"
+                  [class.error]="passwordError">
+                <button mat-icon-button matSuffix 
+                  (click)="toggleNewPasswordVisibility()"
+                  [disabled]="isLoading"
+                  type="button"
+                  matTooltip="Mostrar/Ocultar contraseña">
+                  <mat-icon>{{ showNewPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+                <mat-hint>Usa una combinación de letras, números y símbolos</mat-hint>
+              </mat-form-field>
+            </div>
+
+            <div class="password-field-group">
+              <mat-form-field appearance="outline" class="password-field">
+                <mat-label>Confirmar contraseña</mat-label>
+                <input matInput 
+                  [type]="showConfirmPassword ? 'text' : 'password'" 
+                  [(ngModel)]="passwordConfirmar" 
+                  placeholder="Confirma tu nueva contraseña"
+                  [class.error]="passwordError">
+                <button mat-icon-button matSuffix 
+                  (click)="toggleConfirmPasswordVisibility()"
+                  [disabled]="isLoading"
+                  type="button"
+                  matTooltip="Mostrar/Ocultar contraseña">
+                  <mat-icon>{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+                <mat-hint>Debe coincidir con la nueva contraseña</mat-hint>
+              </mat-form-field>
+            </div>
+
+            <!-- Password Strength Indicator -->
+            <div class="password-strength" *ngIf="passwordNueva">
+              <div class="strength-label">
+                <mat-icon>security</mat-icon>
+                <span>Fortaleza de la contraseña:</span>
+              </div>
+              <div class="strength-bar">
+                <div class="strength-fill" [class]="getPasswordStrengthClass()" [style.width.%]="getPasswordStrength()"></div>
+              </div>
+              <span class="strength-text">{{ getPasswordStrengthText() }}</span>
+            </div>
+
+            <!-- Error Message -->
+            <div class="password-error" *ngIf="passwordError">
+              <mat-icon>error</mat-icon>
+              <span>{{ passwordError }}</span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <button mat-stroked-button (click)="clearPasswordForm()" [disabled]="isLoading">
+          <mat-icon>clear</mat-icon>
+          Limpiar
+        </button>
+        <button mat-raised-button color="primary" (click)="savePassword()" [disabled]="isLoading || !isPasswordFormValid()">
+          <mat-icon>security</mat-icon>
+          Cambiar Contraseña
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Prolongar Sesión Card -->
+    <mat-card class="admin-card security-settings">
+      <mat-card-header>
+        <div class="card-header-icon">
+          <mat-icon>schedule</mat-icon>
+        </div>
+        <div class="card-header-content">
+          <mat-card-title>Prolongar Sesión</mat-card-title>
+          <mat-card-subtitle>Gestiona la duración de tu sesión</mat-card-subtitle>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="security-options">
+          <div class="security-item">
+            <div class="security-info">
+              <h4>Prolongar sesión</h4>
+              <p>Mantener la sesión activa por más tiempo (60 min)</p>
+            </div>
+            <mat-slide-toggle [(ngModel)]="userExtendSession" (change)="onConfirmUserExtend($event)" color="primary"></mat-slide-toggle>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- User Notifications Card -->
+    <mat-card class="admin-card notification-settings">
+      <mat-card-header>
+        <div class="card-header-icon">
+          <mat-icon>notifications</mat-icon>
+        </div>
+        <div class="card-header-content">
+          <mat-card-title>Notificaciones de Sensores</mat-card-title>
+          <mat-card-subtitle>Configura qué alertas quieres recibir de tus sensores</mat-card-subtitle>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="settings-grid">
+          <div class="setting-item">
+            <div class="setting-info">
+             
+            </div>
+            <div class="notification-options">
+              <div class="notification-item">
+                <div class="notification-info">
+                  <h4>🟢 MQ-135 Bueno (0-400 ppm)</h4>
+                  <p>Calidad del aire / CO₂ aprox. - Recibir notificaciones cuando esté en rango bueno</p>
+                </div>
+                <mat-slide-toggle [(ngModel)]="userSystemConfig.notifyMq135Good" color="primary"></mat-slide-toggle>
+              </div>
+              
+              <div class="notification-item">
+                <div class="notification-info">
+                  <h4>🟡 MQ-135 Advertencia (401-1000 ppm)</h4>
+                  <p>Calidad del aire / CO₂ aprox. - Recibir notificaciones cuando esté en rango de advertencia</p>
+                </div>
+                <mat-slide-toggle [(ngModel)]="userSystemConfig.notifyMq135Warning" color="primary"></mat-slide-toggle>
+              </div>
+              
+              <div class="notification-item">
+                <div class="notification-info">
+                  <h4>🔴 MQ-135 Malo (>1000 ppm)</h4>
+                  <p>Calidad del aire / CO₂ aprox. - Recibir notificaciones cuando esté en rango malo</p>
+                </div>
+                <mat-slide-toggle [(ngModel)]="userSystemConfig.notifyMq135Bad" color="primary"></mat-slide-toggle>
+              </div>
+              
+              <div class="notification-item">
+                <div class="notification-info">
+                  <h4>🟢 MQ-7 Bueno (0-10 ppm)</h4>
+                  <p>Monóxido de carbono - Recibir notificaciones cuando esté en rango bueno</p>
+                </div>
+                <mat-slide-toggle [(ngModel)]="userSystemConfig.notifyMq7Good" color="primary"></mat-slide-toggle>
+              </div>
+              
+              <div class="notification-item">
+                <div class="notification-info">
+                  <h4>🟡 MQ-7 Advertencia (11-35 ppm)</h4>
+                  <p>Monóxido de carbono - Recibir notificaciones cuando esté en rango de advertencia</p>
+                </div>
+                <mat-slide-toggle [(ngModel)]="userSystemConfig.notifyMq7Warning" color="primary"></mat-slide-toggle>
+              </div>
+              
+              <div class="notification-item">
+                <div class="notification-info">
+                  <h4>🔴 MQ-7 Malo (>35 ppm)</h4>
+                  <p>Monóxido de carbono - Recibir notificaciones cuando esté en rango malo</p>
+                </div>
+                <mat-slide-toggle [(ngModel)]="userSystemConfig.notifyMq7Bad" color="primary"></mat-slide-toggle>
+              </div>
+              
+              <div class="notification-item">
+                <div class="notification-info">
+                  <h4>🟢 MQ-4 Bueno (0-200 ppm)</h4>
+                  <p>Metano / gas natural - Recibir notificaciones cuando esté en rango bueno</p>
+                </div>
+                <mat-slide-toggle [(ngModel)]="userSystemConfig.notifyMq4Good" color="primary"></mat-slide-toggle>
+              </div>
+              
+              <div class="notification-item">
+                <div class="notification-info">
+                  <h4>🟡 MQ-4 Advertencia (201-1000 ppm)</h4>
+                  <p>Metano / gas natural - Recibir notificaciones cuando esté en rango de advertencia</p>
+                </div>
+                <mat-slide-toggle [(ngModel)]="userSystemConfig.notifyMq4Warning" color="primary"></mat-slide-toggle>
+              </div>
+              
+              <div class="notification-item">
+                <div class="notification-info">
+                  <h4>🔴 MQ-4 Malo (>1000 ppm)</h4>
+                  <p>Metano / gas natural - Recibir notificaciones cuando esté en rango malo</p>
+                </div>
+                <mat-slide-toggle [(ngModel)]="userSystemConfig.notifyMq4Bad" color="primary"></mat-slide-toggle>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <button mat-raised-button color="primary" (click)="saveUserNotifications()" [disabled]="isLoading">
+          <mat-icon>save</mat-icon>
+          Guardar Notificaciones
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Admin Section: primero Configurar notificaciones de usuarios, luego Seguridad -->
+    <div class="admin-sections" *ngIf="rol === 'admin'">
+      
+      <!-- Admin: Configuración de Usuarios (preferencias + notificaciones) -->
+      <mat-card class="admin-card user-notification-admin" *ngIf="rol === 'admin'">
+        <mat-card-header>
+          <div class="card-header-icon">
+            <mat-icon>manage_accounts</mat-icon>
+          </div>
+          <div class="card-header-content">
+            <mat-card-title>Preferencias y notificaciones de usuarios</mat-card-title>
+            <mat-card-subtitle>Selecciona un usuario (rol usuario) y ajusta sus alertas y sesión</mat-card-subtitle>
+          </div>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="settings-grid">
+            <div class="setting-item">
+              <div class="setting-info">
+                <h4>Usuario</h4>
+                <p>Solo se listan usuarios con rol "usuario"</p>
+              </div>
+              <mat-form-field appearance="outline" class="setting-control">
+                <mat-label>Seleccionar usuario</mat-label>
+                <mat-select [(ngModel)]="selectedUserId" (selectionChange)="onSelectUserForConfig()">
+                  <mat-option *ngFor="let u of usuariosRolUsuario" [value]="u.id">{{ u.nombre }} (ID {{ u.id }})</mat-option>
+                </mat-select>
+                <mat-icon matSuffix>person_search</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <div class="setting-item" *ngIf="selectedUserId">
+              <div class="setting-info">
+                <h4>Alertas por sensor/estado</h4>
+                <p>Estas preferencias afectan qué notificaciones se generan para el usuario</p>
+              </div>
+              <div class="notification-options">
+                <div class="notification-item">
+                  <div class="notification-info">
+                    <h4>Prolongar sesión (60 min)</h4>
+                    <p>Si está desactivado, la sesión dura 30 minutos</p>
+                  </div>
+                  <mat-slide-toggle [(ngModel)]="selectedUserExtendSession" (change)="onConfirmSelectedUserExtend($event)" color="primary"></mat-slide-toggle>
+                </div>
+                <div class="notification-item">
+                  <div class="notification-info">
+                    <h4>🟢 MQ-135 Bueno</h4>
+                    <p>CO₂ aprox. en rango bueno</p>
+                  </div>
+                  <mat-slide-toggle [(ngModel)]="selectedUserConfig.notifyMq135Good" color="primary"></mat-slide-toggle>
+                </div>
+                <div class="notification-item">
+                  <div class="notification-info">
+                    <h4>🟡 MQ-135 Advertencia</h4>
+                    <p>CO₂ aprox. elevado</p>
+                  </div>
+                  <mat-slide-toggle [(ngModel)]="selectedUserConfig.notifyMq135Warning" color="primary"></mat-slide-toggle>
+                </div>
+                <div class="notification-item">
+                  <div class="notification-info">
+                    <h4>🔴 MQ-135 Malo</h4>
+                    <p>CO₂ aprox. peligroso</p>
+                  </div>
+                  <mat-slide-toggle [(ngModel)]="selectedUserConfig.notifyMq135Bad" color="primary"></mat-slide-toggle>
+                </div>
+
+                <div class="notification-item">
+                  <div class="notification-info">
+                    <h4>🟢 MQ-7 Bueno</h4>
+                    <p>CO normal</p>
+                  </div>
+                  <mat-slide-toggle [(ngModel)]="selectedUserConfig.notifyMq7Good" color="primary"></mat-slide-toggle>
+                </div>
+                <div class="notification-item">
+                  <div class="notification-info">
+                    <h4>🟡 MQ-7 Advertencia</h4>
+                    <p>CO elevado</p>
+                  </div>
+                  <mat-slide-toggle [(ngModel)]="selectedUserConfig.notifyMq7Warning" color="primary"></mat-slide-toggle>
+                </div>
+                <div class="notification-item">
+                  <div class="notification-info">
+                    <h4>🔴 MQ-7 Malo</h4>
+                    <p>CO peligroso</p>
+                  </div>
+                  <mat-slide-toggle [(ngModel)]="selectedUserConfig.notifyMq7Bad" color="primary"></mat-slide-toggle>
+                </div>
+
+                <div class="notification-item">
+                  <div class="notification-info">
+                    <h4>🟢 MQ-4 Bueno</h4>
+                    <p>Metano en rango seguro</p>
+                  </div>
+                  <mat-slide-toggle [(ngModel)]="selectedUserConfig.notifyMq4Good" color="primary"></mat-slide-toggle>
+                </div>
+                <div class="notification-item">
+                  <div class="notification-info">
+                    <h4>🟡 MQ-4 Advertencia</h4>
+                    <p>Metano elevado</p>
+                  </div>
+                  <mat-slide-toggle [(ngModel)]="selectedUserConfig.notifyMq4Warning" color="primary"></mat-slide-toggle>
+                </div>
+                <div class="notification-item">
+                  <div class="notification-info">
+                    <h4>🔴 MQ-4 Malo</h4>
+                    <p>Metano peligroso</p>
+                  </div>
+                  <mat-slide-toggle [(ngModel)]="selectedUserConfig.notifyMq4Bad" color="primary"></mat-slide-toggle>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-card-actions align="end">
+          <button mat-raised-button color="primary" (click)="saveSelectedUserConfig()" [disabled]="!selectedUserId || isLoading">
+            <mat-icon>save</mat-icon>
+            Guardar configuración de usuario
+          </button>
+        </mat-card-actions>
+      </mat-card>
+
+      <!-- Admin: Control para mostrar/ocultar la gestión de sesión de usuarios -->
+      <mat-card class="admin-card user-session-toggle" *ngIf="rol === 'admin'">
+        <mat-card-header>
+          <div class="card-header-icon">
+            <mat-icon>group</mat-icon>
+          </div>
+          <div class="card-header-content">
+            <mat-card-title>Gestión de sesión de usuarios</mat-card-title>
+            <mat-card-subtitle>Filtra por sesión activa o prolongación y ajusta en línea</mat-card-subtitle>
+          </div>
+          <div class="card-header-actions" style="margin-left:auto;">
+            <button mat-stroked-button (click)="toggleUsuariosSesion()">
+              <mat-icon>{{ showUsuariosSesion ? 'expand_less' : 'expand_more' }}</mat-icon>
+              {{ showUsuariosSesion ? 'Ocultar' : 'Mostrar' }}
+            </button>
+          </div>
+        </mat-card-header>
+      </mat-card>
+
+      <!-- Admin: Contenido de la gestión de sesión dentro de la misma tarjeta -->
+      <mat-card class="admin-card user-session-table" *ngIf="rol === 'admin' && showUsuariosSesion">
+        <mat-card-content>
+          <div *ngIf="isLoadingUsuariosSesion" style="display:flex;justify-content:center;align-items:center;padding:24px;">
+            <mat-spinner diameter="40"></mat-spinner>
+          </div>
+          <div class="filter-row" style="display:flex; gap:12px; align-items:center; margin-bottom:16px;">
+            <mat-form-field appearance="outline" style="width:220px;">
+              <mat-label>Rol</mat-label>
+              <mat-select [(ngModel)]="usuariosSesionFilter.rol" (selectionChange)="aplicarFiltroUsuariosSesion()">
+                <mat-option value="">Todos</mat-option>
+                <mat-option value="usuario">usuario</mat-option>
+                <mat-option value="admin">admin</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" style="width:220px;">
+              <mat-label>Sesión activa</mat-label>
+              <mat-select [(ngModel)]="usuariosSesionFilter.activa" (selectionChange)="aplicarFiltroUsuariosSesion()">
+                <mat-option value="">Todas</mat-option>
+                <mat-option value="true">Activa</mat-option>
+                <mat-option value="false">Inactiva</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" style="width:220px;">
+              <mat-label>Prolongación</mat-label>
+              <mat-select [(ngModel)]="usuariosSesionFilter.prolongar" (selectionChange)="aplicarFiltroUsuariosSesion()">
+                <mat-option value="">Todas</mat-option>
+                <mat-option value="true">60 min</mat-option>
+                <mat-option value="false">30 min</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <table mat-table [dataSource]="usuariosSesionFiltered" class="mat-elevation-z1" style="width:100%; border: 1px solid #e5e7eb; border-radius:12px; overflow:hidden;">
+            <ng-container matColumnDef="nombre">
+              <th mat-header-cell *matHeaderCellDef> Usuario </th>
+              <td mat-cell *matCellDef="let row">{{ row.nombre }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef> Email </th>
+              <td mat-cell *matCellDef="let row">{{ row.email }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="rol">
+              <th mat-header-cell *matHeaderCellDef> Rol </th>
+              <td mat-cell *matCellDef="let row">{{ row.rol }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="sesion">
+              <th mat-header-cell *matHeaderCellDef> Sesión </th>
+              <td mat-cell *matCellDef="let row">
+                <span class="chip" [ngStyle]="{background: row.sesion_activa ? '#e8f5e9' : '#f5f5f5', color: row.sesion_activa ? '#2e7d32' : '#555'}">
+                  {{ row.sesion_activa ? 'Activa' : 'Inactiva' }}
+                </span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="prolongar">
+              <th mat-header-cell *matHeaderCellDef> Prolongar </th>
+              <td mat-cell *matCellDef="let row">
+                <mat-slide-toggle [ngModel]="row.prolongar_sesion" (change)="actualizarProlongacionUsuarioInline(row, $event)" color="primary"></mat-slide-toggle>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="['nombre','email','rol','sesion','prolongar']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['nombre','email','rol','sesion','prolongar'];"></tr>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    
+  </div>
+</div>
+
+

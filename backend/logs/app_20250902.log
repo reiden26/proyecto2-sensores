@@ -1,0 +1,32 @@
+2025-09-02 12:40:15 - app - INFO - setup_logging:100 - Logging configurado correctamente
+2025-09-02 12:40:15 - uvicorn.error - INFO - _serve:84 - Started server process [36168]
+2025-09-02 12:40:15 - uvicorn.error - INFO - startup:48 - Waiting for application startup.
+2025-09-02 12:40:15 - uvicorn.error - INFO - startup:62 - Application startup complete.
+2025-09-02 12:40:20 - uvicorn.error - INFO - shutdown:264 - Shutting down
+2025-09-02 12:40:20 - uvicorn.error - INFO - shutdown:67 - Waiting for application shutdown.
+2025-09-02 12:40:20 - uvicorn.error - INFO - shutdown:76 - Application shutdown complete.
+2025-09-02 12:40:20 - uvicorn.error - INFO - _serve:94 - Finished server process [36168]
+2025-09-02 12:40:21 - app - INFO - setup_logging:100 - Logging configurado correctamente
+2025-09-02 12:40:21 - uvicorn.error - INFO - _serve:84 - Started server process [34060]
+2025-09-02 12:40:21 - uvicorn.error - INFO - startup:48 - Waiting for application startup.
+2025-09-02 12:40:21 - uvicorn.error - INFO - startup:62 - Application startup complete.
+2025-09-02 12:40:28 - uvicorn.error - INFO - shutdown:264 - Shutting down
+2025-09-02 12:40:28 - uvicorn.error - INFO - shutdown:67 - Waiting for application shutdown.
+2025-09-02 12:40:28 - uvicorn.error - INFO - shutdown:76 - Application shutdown complete.
+2025-09-02 12:40:28 - uvicorn.error - INFO - _serve:94 - Finished server process [34060]
+2025-09-02 12:40:29 - app - INFO - setup_logging:100 - Logging configurado correctamente
+2025-09-02 12:40:29 - uvicorn.error - INFO - _serve:84 - Started server process [22072]
+2025-09-02 12:40:29 - uvicorn.error - INFO - startup:48 - Waiting for application startup.
+2025-09-02 12:40:29 - uvicorn.error - INFO - startup:62 - Application startup complete.
+2025-09-02 12:41:23 - uvicorn.error - INFO - shutdown:264 - Shutting down
+2025-09-02 12:41:23 - uvicorn.error - INFO - shutdown:67 - Waiting for application shutdown.
+2025-09-02 12:41:23 - uvicorn.error - INFO - shutdown:76 - Application shutdown complete.
+2025-09-02 12:41:23 - uvicorn.error - INFO - _serve:94 - Finished server process [22072]
+2025-09-02 12:41:24 - app - INFO - setup_logging:100 - Logging configurado correctamente
+2025-09-02 12:41:24 - uvicorn.error - INFO - _serve:84 - Started server process [29176]
+2025-09-02 12:41:24 - uvicorn.error - INFO - startup:48 - Waiting for application startup.
+2025-09-02 12:41:24 - uvicorn.error - INFO - startup:62 - Application startup complete.
+2025-09-02 12:42:07 - uvicorn.error - INFO - shutdown:264 - Shutting down
+2025-09-02 12:42:07 - uvicorn.error - INFO - shutdown:67 - Waiting for application shutdown.
+2025-09-02 12:42:07 - uvicorn.error - INFO - shutdown:76 - Application shutdown complete.
+2025-09-02 12:42:07 - uvicorn.error - INFO - _serve:94 - Finished server process [29176]

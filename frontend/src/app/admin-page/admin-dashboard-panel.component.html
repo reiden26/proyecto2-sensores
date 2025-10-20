@@ -1,0 +1,223 @@
+<div class="admin-dashboard-panel">
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 class="hero-title">
+          <span class="gradient-text">Panel de Administración</span>
+        </h1>
+        <p class="hero-subtitle">
+          Gestiona y supervisa todos los datos del sistema iot de calidad del aire
+        </p>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-number">
+              <mat-spinner *ngIf="isLoading" diameter="24"></mat-spinner>
+              <span *ngIf="!isLoading">{{ totalUsers }}</span>
+            </div>
+            <div class="stat-label">Usuarios Activos</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">
+              <mat-spinner *ngIf="isLoading" diameter="24"></mat-spinner>
+              <span *ngIf="!isLoading">{{ totalSensors }}</span>
+            </div>
+            <div class="stat-label">Sensores Vinculados</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">
+              <mat-spinner *ngIf="isLoading" diameter="24"></mat-spinner>
+              <span *ngIf="!isLoading">{{ totalDataPoints | number }}</span>
+            </div>
+            <div class="stat-label">Datos Recopilados</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="floating-cards">
+          <div class="floating-card card-1">
+            <mat-icon>analytics</mat-icon>
+          </div>
+          <div class="floating-card card-2">
+            <mat-icon>people</mat-icon>
+          </div>
+          <div class="floating-card card-3">
+            <mat-icon>sensors</mat-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Capabilities Grid -->
+  <div class="capabilities-section">
+    <div class="section-header">
+      
+    </div>
+
+    <div class="capabilities-grid">
+      <!-- Gestión de Usuarios -->
+      <mat-card class="capability-card user-management" (click)="navigateTo('usuarios')">
+        <div class="card-header">
+          <div class="card-icon">
+            <mat-icon>group</mat-icon>
+          </div>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Gestión de Usuarios</h3>
+          <p class="card-description">
+            Administra usuarios, roles y permisos. Controla el acceso al sistema y mantén la seguridad.
+          </p>
+          <div class="card-features">
+            <div class="feature-item">
+              <mat-icon>person_add</mat-icon>
+              <span>Crear usuarios</span>
+            </div>
+            <div class="feature-item">
+              <mat-icon>edit</mat-icon>
+              <span>Editar perfiles</span>
+            </div>
+            <div class="feature-item">
+              <mat-icon>security</mat-icon>
+              <span>Gestionar roles</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button mat-raised-button class="action-button">
+            <mat-icon>arrow_forward</mat-icon>
+            <span>Gestionar Usuarios</span>
+          </button>
+        </div>
+      </mat-card>
+
+      <!-- Gestión de Datos -->
+      <mat-card class="capability-card data-management" (click)="navigateTo('datos')">
+        <div class="card-header">
+          <div class="card-icon">
+            <mat-icon>analytics</mat-icon>
+          </div>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Gestión de Datos</h3>
+          <p class="card-description">
+            Visualiza, analiza y exporta datos de sensores. Monitorea el rendimiento del sistema en tiempo real y genera insights valiosos.
+          </p>
+          <div class="card-features">
+            <div class="feature-item">
+              <mat-icon>timeline</mat-icon>
+              <span>Análisis temporal</span>
+            </div>
+            <div class="feature-item">
+              <mat-icon>download</mat-icon>
+              <span>Exportar datos</span>
+            </div>
+            <div class="feature-item">
+              <mat-icon>monitoring</mat-icon>
+              <span>Monitoreo en vivo</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button mat-raised-button class="action-button">
+            <mat-icon>arrow_forward</mat-icon>
+            <span>Ver Datos</span>
+          </button>
+        </div>
+      </mat-card>
+
+      <!-- Reportes -->
+      <mat-card class="capability-card reports" (click)="navigateTo('reportes')">
+        <div class="card-header">
+          <div class="card-icon">
+            <mat-icon>assessment</mat-icon>
+          </div>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Reportes y Análisis</h3>
+          <p class="card-description">
+            Genera reportes detallados, análisis estadísticos y insights para la toma de decisiones.
+          </p>
+          <div class="card-features">
+            <div class="feature-item">
+              <mat-icon>bar_chart</mat-icon>
+              <span>Gráficos avanzados</span>
+            </div>
+            <div class="feature-item">
+              <mat-icon>picture_as_pdf</mat-icon>
+              <span>Reportes PDF</span>
+            </div>
+            <div class="feature-item">
+              <mat-icon>insights</mat-icon>
+              <span>Análisis predictivo</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button mat-raised-button class="action-button">
+            <mat-icon>arrow_forward</mat-icon>
+            <span>Generar Reportes</span>
+          </button>
+        </div>
+      </mat-card>
+
+      <!-- Configuración del Sistema -->
+      <mat-card class="capability-card system-config" (click)="navigateTo('configuracion')">
+        <div class="card-header">
+          <div class="card-icon">
+            <mat-icon>settings</mat-icon>
+          </div>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Configuración del Sistema</h3>
+          <p class="card-description">
+            Configura parámetros del sistema, ajusta alertas y personaliza la experiencia de usuario.
+          </p>
+          <div class="card-features">
+            <div class="feature-item">
+              <mat-icon>tune</mat-icon>
+              <span>Ajustes del sistema</span>
+            </div>
+            <div class="feature-item">
+              <mat-icon>notifications</mat-icon>
+              <span>Configurar alertas</span>
+            </div>
+            <div class="feature-item">
+              <mat-icon>palette</mat-icon>
+              <span>Personalización</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button mat-raised-button class="action-button">
+            <mat-icon>arrow_forward</mat-icon>
+            <span>Configurar</span>
+          </button>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions-section">
+    <div class="section-header">
+      <h2 class="section-title">Acciones Rápidas</h2>
+      <p class="section-subtitle"></p>
+    </div>
+    
+    <div class="quick-actions-grid">
+      <button mat-fab class="quick-action-btn" (click)="navigateTo('usuarios')" matTooltip="Agregar nuevo usuario">
+        <mat-icon>person_add</mat-icon>
+      </button>
+      <button mat-fab class="quick-action-btn" (click)="navigateTo('datos')" matTooltip="Ver datos en tiempo real">
+        <mat-icon>visibility</mat-icon>
+      </button>
+      <button mat-fab class="quick-action-btn" (click)="navigateTo('reportes')" matTooltip="Generar reporte rápido">
+        <mat-icon>file_download</mat-icon>
+      </button>
+      <button mat-fab class="quick-action-btn" (click)="navigateTo('configuracion')" matTooltip="Configuración del sistema">
+        <mat-icon>settings</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

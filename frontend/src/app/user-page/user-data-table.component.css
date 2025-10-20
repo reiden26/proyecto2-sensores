@@ -1,0 +1,559 @@
+/* Fondo principal - sin fondo blanco, solo contenedor */
+.user-data-table-bg {
+  min-height: 100vh;
+  background: transparent;
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Indicador de carga */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.loading-container p {
+  margin-top: 20px;
+  color: #666;
+  font-size: 16px;
+}
+
+/* Contenedor principal */
+.user-data-table-container {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Controles de Angular Material con fondo blanco */
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-text-field-wrapper {
+  background: #ffffff !important;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 8px !important;
+}
+
+:host ::ng-deep .mat-mdc-input-element,
+:host ::ng-deep .mat-mdc-form-field-label {
+  color: #333333 !important;
+}
+
+:host ::ng-deep .mat-mdc-input-element::placeholder { 
+  color: #666666 !important; 
+}
+
+/* Tabla con fondo blanco */
+:host ::ng-deep .mat-mdc-table {
+  background: #ffffff !important;
+  color: #333333 !important;
+}
+
+:host ::ng-deep .mat-mdc-header-row {
+  background: #f5f5f5 !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+:host ::ng-deep .mat-mdc-header-cell { color: #333333 !important; font-weight: 700 !important; }
+
+:host ::ng-deep .mat-mdc-row:hover {
+  background: #f8f9fa !important;
+}
+
+/* Paginador con fondo blanco */
+:host ::ng-deep .mat-mdc-paginator {
+  background: #ffffff !important;
+  border-top: 1px solid #e0e0e0 !important;
+  color: #333333 !important;
+}
+
+:host ::ng-deep .mat-mdc-paginator .mat-mdc-select-value,
+:host ::ng-deep .mat-mdc-paginator .mat-mdc-icon-button { color: #333333 !important; }
+
+/* Header de la tabla */
+.table-header {
+  background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+  border-bottom: 1px solid #4CAF50;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.table-header h2 {
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-icon {
+  color: #ffffff !important;
+  font-size: 1.8rem !important;
+  width: 1.8rem !important;
+  height: 1.8rem !important;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  background: transparent;
+  padding: 0.5rem 0;
+}
+
+.header-actions button {
+  height: 45px;
+  min-width: 130px;
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 25px !important;
+  backdrop-filter: blur(10px);
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.header-actions button:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
+}
+
+.header-actions button:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+:host ::ng-deep .header-actions button .mat-icon {
+  margin-right: 8px !important;
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+/* Filtros avanzados */
+.filters-container {
+  background: #f8f9fa;
+  border-top: 1px solid #e0e0e0;
+  padding: 20px;
+}
+
+.filters-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.filter-field {
+  min-width: 200px;
+}
+
+.clear-filters-btn {
+  height: 40px;
+  margin-left: auto;
+}
+
+.search-field {
+  min-width: 300px;
+}
+
+/* Estilos para el campo de búsqueda en el header verde - Material 3 con solo borde inferior */
+.table-header .search-field {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  backdrop-filter: blur(10px) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  opacity: 0.8 !important;
+  transform: scale(0.98) !important;
+}
+
+.table-header .search-field:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  transform: scale(1) !important;
+  opacity: 0.9 !important;
+}
+
+/* Estado activo del campo de búsqueda */
+.table-header .search-field.search-active {
+  background: rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2) !important;
+  transform: scale(1.02) !important;
+  opacity: 1 !important;
+}
+
+/* Estilos para appearance="outline" con solo borde inferior */
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field {
+  border-radius: 8px !important;
+  overflow: visible !important;
+}
+
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field .mat-mdc-text-field-wrapper {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 8px 16px !important;
+  box-shadow: none !important;
+  transition: all 0.3s ease !important;
+}
+
+/* Ocultar TODOS los bordes - sin borde inferior ni ningún otro borde */
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline {
+  display: none !important;
+}
+
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-thick {
+  display: none !important;
+}
+
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-start {
+  display: none !important;
+}
+
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-end {
+  display: none !important;
+}
+
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-gap {
+  display: none !important;
+}
+
+/* Ocultar bordes en estado focus/click */
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline {
+  display: none !important;
+}
+
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-thick {
+  display: none !important;
+}
+
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-start {
+  display: none !important;
+}
+
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-end {
+  display: none !important;
+}
+
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-gap {
+  display: none !important;
+}
+
+/* Colores del texto - negro para mejor visibilidad */
+:host ::ng-deep .table-header .search-field .mat-mdc-input-element {
+  color: #333333 !important;
+  font-style: normal !important;
+  transition: all 0.3s ease !important;
+}
+
+:host ::ng-deep .table-header .search-field.search-active .mat-mdc-input-element {
+  color: #000000 !important;
+  font-style: normal !important;
+}
+
+/* Ocultar completamente el label flotante para evitar bordes azules */
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field-label {
+  display: none !important;
+}
+
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field-label.mdc-floating-label--float-above {
+  display: none !important;
+}
+
+/* Ocultar el borde azul del label flotante */
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline .mat-mdc-form-field-outline-start,
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline .mat-mdc-form-field-outline-end,
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline .mat-mdc-form-field-outline-gap {
+  display: none !important;
+  border: none !important;
+}
+
+/* Ocultar el borde azul en estado focused */
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline .mat-mdc-form-field-outline-start,
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline .mat-mdc-form-field-outline-end,
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline .mat-mdc-form-field-outline-gap {
+  display: none !important;
+  border: none !important;
+}
+
+/* Icono de búsqueda - verde para contraste con fondo blanco */
+:host ::ng-deep .table-header .search-field .mat-mdc-icon-button .mat-icon {
+  color: #4CAF50 !important;
+}
+
+:host ::ng-deep .table-header .search-field.search-active .mat-mdc-icon-button .mat-icon {
+  color: #2E7D32 !important;
+}
+
+/* Padding del input */
+:host ::ng-deep .table-header .mat-mdc-form-field .mat-mdc-form-field-infix {
+  padding: 12px 0 !important;
+  min-height: auto !important;
+}
+
+/* Asegurar que NO aparezcan bordes en ningún estado */
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field {
+  border: none !important;
+  outline: none !important;
+}
+
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field .mat-mdc-text-field-wrapper {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field .mat-mdc-text-field-wrapper * {
+  border: none !important;
+  outline: none !important;
+}
+
+/* Eliminar cualquier borde que pueda aparecer en cualquier estado */
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline,
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-thick,
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-start,
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-end,
+:host ::ng-deep .table-header .search-field .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-outline-gap {
+  display: none !important;
+  border: none !important;
+  outline: none !important;
+}
+
+
+:host ::ng-deep .table-header .mat-mdc-input-element::placeholder { 
+  color: #888888 !important;
+  font-weight: 400 !important;
+}
+
+:host ::ng-deep .table-header .mat-mdc-form-field-label {
+  display: none !important;
+}
+
+:host ::ng-deep .table-header .mat-mdc-form-field .mat-mdc-form-field-subscript-wrapper {
+  display: none !important;
+}
+
+:host ::ng-deep .table-header .mat-mdc-form-field .mat-icon {
+  color: #4CAF50 !important;
+  font-size: 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+
+
+/* Wrapper de la tabla */
+.table-wrapper {
+  overflow-x: auto;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+/* Tabla */
+.user-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.user-data-table th {
+  background: #f5f5f5;
+  color: #333333;
+  font-weight: 700;
+  text-align: left;
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.user-data-table td {
+  color: #333333;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+.table-row:hover {
+  background: #f8f9fa;
+}
+
+
+/* Mensaje sin datos */
+.no-data {
+  text-align: center;
+  padding: 3rem;
+  color: #666666;
+}
+
+/* Footer de la tabla */
+.table-footer {
+  background: #f8f9fa;
+  padding: 1rem 2rem;
+  border-top: 1px solid #e0e0e0;
+  text-align: right;
+}
+
+.record-count {
+  color: #666666;
+  font-size: 0.9rem;
+}
+
+/* Estilos para las nuevas celdas de sensores */
+.sensor-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sensor-icon {
+  color: #666666;
+  font-size: 1.2rem;
+}
+
+.value-cell {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.value-number {
+  font-weight: 700;
+  color: #333333;
+  font-size: 1.1rem;
+}
+
+.value-unit {
+  color: #666666;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.datetime-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.date {
+  color: #333333;
+  font-weight: 500;
+}
+
+.time {
+  color: #666666;
+  font-size: 0.85rem;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.status-icon {
+  font-size: 1rem;
+}
+
+.status-bueno {
+  background: rgba(76, 175, 80, 0.1);
+  color: #4CAF50;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.status-advertencia {
+  background: rgba(255, 193, 7, 0.1);
+  color: #ff9800;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.status-malo {
+  background: rgba(244, 67, 54, 0.1);
+  color: #f44336;
+  border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+/* Estilos para notificaciones SnackBar */
+:host ::ng-deep .success-snackbar {
+  background: #4CAF50 !important;
+  color: white !important;
+}
+
+:host ::ng-deep .error-snackbar {
+  background: #f44336 !important;
+  color: white !important;
+}
+
+:host ::ng-deep .warning-snackbar {
+  background: #ff9800 !important;
+  color: white !important;
+}
+
+:host ::ng-deep .info-snackbar {
+  background: #2196F3 !important;
+  color: white !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .user-data-table-bg {
+    padding: 1rem;
+  }
+  
+  .table-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .header-actions {
+    justify-content: space-between;
+  }
+  
+  .search-field {
+    min-width: 100%;
+  }
+  
+  .user-data-table th,
+  .user-data-table td {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+  
+  .sensor-cell {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .value-cell {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+
+

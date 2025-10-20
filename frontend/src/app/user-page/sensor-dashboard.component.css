@@ -1,0 +1,324 @@
+/* Dashboard Container */
+.dashboard-container {
+  min-height: auto;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.dashboard-header h2 {
+  color: white;
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Time Filters */
+.time-filters {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Estilos glassmorphism para MatButtonToggle (filtro de tiempo) */
+:host ::ng-deep .mat-button-toggle-group {
+  background: transparent !important;
+  border: none !important;
+  display: inline-flex;
+  gap: 0.5rem;
+}
+
+:host ::ng-deep .mat-button-toggle {
+  border: none !important;
+}
+
+:host ::ng-deep .mat-button-toggle-button {
+  background: #f5f5f5 !important;
+  border: 1px solid #e0e0e0 !important;
+  color: #333333 !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease !important;
+}
+
+:host ::ng-deep .mat-button-toggle-button:hover {
+  background: #e0e0e0 !important;
+  color: #333333 !important;
+  transform: translateY(-1px);
+}
+
+:host ::ng-deep .mat-button-toggle-checked .mat-button-toggle-button {
+  background: #4CAF50 !important;
+  border-color: #4CAF50 !important;
+  color: #ffffff !important;
+}
+
+/* Charts Grid */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: -2rem;
+}
+
+/* Chart Card */
+.chart-card {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.chart-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Chart Header */
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.sensor-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sensor-title mat-icon {
+  color: white;
+  font-size: 1.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+  border-radius: 6px;
+  padding: 4px;
+  box-shadow: 0 2px 6px rgba(46, 125, 50, 0.3);
+}
+
+.chart-header h3 {
+  color: #333333;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.sensor-status {
+  background: #f0f0f0;
+  color: #666666;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.sensor-status.active {
+  background: rgba(76, 175, 80, 0.3);
+  color: #4CAF50;
+  border: 1px solid rgba(76, 175, 80, 0.5);
+}
+
+/* Chart Container */
+.chart-container {
+  height: 150px;
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+
+.chart-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Chart Info */
+.chart-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.current-value {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.current-value .value {
+  color: #333333;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.current-value .unit {
+  color: #666666;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.last-update {
+  color: #666666;
+  font-size: 0.8rem;
+}
+
+/* Dashboard Actions */
+.dashboard-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.refresh-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.refresh-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1rem;
+    padding-top: 5rem;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .dashboard-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .chart-card {
+    padding: 1rem;
+  }
+
+  .chart-container {
+    height: 150px;
+  }
+
+  .chart-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .time-filters {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .filter-btn {
+    flex: 1;
+    text-align: center;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-container {
+    padding: 0.5rem;
+    padding-top: 5rem;
+  }
+
+  .chart-card {
+    padding: 0.75rem;
+  }
+
+  .chart-container {
+    height: 120px;
+  }
+
+  .current-value .value {
+    font-size: 1.2rem;
+  }
+
+  .refresh-btn {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Loading Animation */
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.refresh-btn:disabled span {
+  animation: pulse 1.5s infinite;
+}
+
+/* Chart Loading State */
+.chart-container.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+}
+
+/* Custom Scrollbar */
+.dashboard-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dashboard-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.dashboard-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+.dashboard-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}

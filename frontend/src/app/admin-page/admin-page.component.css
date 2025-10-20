@@ -1,0 +1,21 @@
+.admin-bg {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #27496d 0%, #142850 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.admin-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  padding: 2.5rem 2rem;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+.admin-card h2 {
+  color: #27496d;
+  font-size: 1.5rem;
+  font-weight: 700;
+}

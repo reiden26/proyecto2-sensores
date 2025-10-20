@@ -1,0 +1,112 @@
+<div class="user-dashboard">
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #drawer mode="side" [opened]="showSidebar" class="sidenav glass-sidenav">
+      <div class="sidenav-header">
+        <div class="header-content">
+          <h2 class="app-title">Proyecto II</h2>
+          <div class="header-actions">
+            <button mat-icon-button (click)="toggleSidebar()" class="toggle-button">
+              <mat-icon>{{ showSidebar ? 'chevron_left' : 'chevron_right' }}</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <mat-nav-list class="navigation-list">
+        <a mat-list-item (click)="navigateTo('dashboard')" [class.active]="isActiveRoute('/usuario')" class="nav-item" [ngClass]="{'active': isActiveRoute('/usuario')}">
+          <mat-icon matListItemIcon>dashboard</mat-icon>
+          <span matListItemTitle style="color: #fff;">Panel Principal</span>
+        </a>
+        
+        <a mat-list-item (click)="navigateTo('sensores')" [class.active]="isActiveRoute('/usuario/sensores')" class="nav-item" [ngClass]="{'active': isActiveRoute('/usuario/sensores')}">
+          <mat-icon matListItemIcon>sensors</mat-icon>
+          <span matListItemTitle style="color: #fff;">Mis Sensores</span>
+        </a>
+        
+        <a mat-list-item (click)="navigateTo('datos')" [class.active]="isActiveRoute('/usuario/datos')" class="nav-item" [ngClass]="{'active': isActiveRoute('/usuario/datos')}">
+          <mat-icon matListItemIcon>analytics</mat-icon>
+          <span matListItemTitle style="color: #fff;">Mis Datos</span>
+        </a>
+        
+        <a mat-list-item (click)="navigateTo('reportes')" [class.active]="isActiveRoute('/usuario/reportes')" class="nav-item" [ngClass]="{'active': isActiveRoute('/usuario/reportes')}">
+          <mat-icon matListItemIcon>insert_chart</mat-icon>
+          <span matListItemTitle style="color: #fff;">Reportes</span>
+        </a>
+      </mat-nav-list>
+
+      <!-- Dropdown del usuario al final -->
+      <div class="user-dropdown-section">
+        <div class="user-container">
+          <!-- Área del usuario (clickeable para dropdown) -->
+          <div class="user-info" (click)="toggleDropdown($event)">
+            <div class="user-avatar">
+              <img *ngIf="usuario?.imagen_url" [src]="usuario.imagen_url" [alt]="usuario.nombre" class="user-image">
+              <mat-icon *ngIf="!usuario?.imagen_url">person</mat-icon>
+            </div>
+            <div class="user-details">
+              <span class="user-name">{{ nombre }}</span>
+            </div>
+            <span class="arrow" [class.rotated]="isDropdownOpen">▾</span>
+          </div>
+          
+          <!-- Separador visual -->
+          <div class="separator"></div>
+          
+          <!-- Área de notificaciones (independiente) -->
+          <div class="notification-area">
+            <app-notification-bell userRole="usuario" class="notification-bell"></app-notification-bell>
+          </div>
+        </div>
+        
+        <!-- Dropdown del usuario -->
+        <div class="user-menu" [class.open]="isDropdownOpen">
+          <a class="menu-item" (click)="navigateTo('configuracion'); isDropdownOpen = false">
+            <mat-icon class="settings-icon">settings</mat-icon>
+            <span>Configuración</span>
+          </a>
+          <div class="menu-divider"></div>
+          <a class="menu-item" (click)="openLogoutConfirm(); isDropdownOpen = false">
+            <mat-icon class="logout-icon">logout</mat-icon>
+            <span>Cerrar Sesión</span>
+          </a>
+        </div>
+      </div>
+
+    </mat-sidenav>
+
+    <mat-sidenav-content class="main-content">
+      <div class="content-wrapper">
+        <router-outlet></router-outlet>
+      </div>
+      <!-- Botón flotante para reabrir el sidenav cuando está oculto -->
+      <button *ngIf="!showSidebar" mat-fab class="sidenav-fab" (click)="toggleSidebar()" aria-label="Mostrar menú">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+
+  <!-- Modal de confirmación de logout mejorado -->
+  <div *ngIf="showLogoutConfirm" class="confirm-overlay">
+    <div class="confirm-card">
+      <div class="confirm-header">
+        <div class="confirm-icon">
+          <mat-icon>logout</mat-icon>
+        </div>
+        <h4>Cerrar Sesión</h4>
+      </div>
+      <div class="confirm-body">
+        <p>¿Estás seguro de que deseas cerrar tu sesión?</p>
+      </div>
+      <div class="confirm-actions">
+        <button class="btn-cancel" (click)="cancelLogout()">
+          <mat-icon>close</mat-icon>
+          <span>Cancelar</span>
+        </button>
+        <button class="btn-confirm" (click)="acceptLogout()">
+          <mat-icon>logout</mat-icon>
+          <span>Cerrar Sesión</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

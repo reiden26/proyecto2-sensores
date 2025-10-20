@@ -1,0 +1,312 @@
+<div class="admin-data-container">
+  <!-- Header con estadísticas -->
+  <mat-card class="header-card">
+    <mat-card-header>
+      <div class="header-avatar">
+        <mat-icon>analytics</mat-icon>
+      </div>
+      <div>
+        <mat-card-title>Gestión de Datos de Sensores</mat-card-title>
+        <mat-card-subtitle>Administra todos los datos de sensores del sistema</mat-card-subtitle>
+      </div>
+    </mat-card-header>
+  </mat-card>
+
+  <!-- Tarjetas de estadísticas -->
+  <div class="stats-grid">
+    <mat-card class="stat-card total">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon">
+            <mat-icon>analytics</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>
+              <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+              <span *ngIf="!isLoading">{{ statistics.total }}</span>
+            </h3>
+            <p>Total de Registros</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card buenos">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon">
+            <mat-icon>check_circle</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>
+              <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+              <span *ngIf="!isLoading">{{ statistics.buenos }}</span>
+            </h3>
+            <p>Buenos</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card advertencias">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon">
+            <mat-icon>warning</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>
+              <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+              <span *ngIf="!isLoading">{{ statistics.advertencias }}</span>
+            </h3>
+            <p>Advertencias</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card malos">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon">
+            <mat-icon>error</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>
+              <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+              <span *ngIf="!isLoading">{{ statistics.malos }}</span>
+            </h3>
+            <p>Malos</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Filtros -->
+  <mat-card class="filters-card" *ngIf="showFilters">
+    <mat-card-header>
+      <div class="filters-header">
+        <mat-card-title>Filtros</mat-card-title>
+        <button mat-icon-button (click)="toggleFilters()" class="close-filters-btn" title="Cerrar filtros">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="filters-grid">
+        <!-- Búsqueda general -->
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Buscar</mat-label>
+          <input matInput [(ngModel)]="searchTerm" (input)="applyFilter()" placeholder="Usuario, sensor, valor...">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <!-- Filtro por sensor -->
+        <mat-form-field appearance="outline">
+          <mat-label>Sensor</mat-label>
+          <mat-select [(ngModel)]="selectedSensor" (selectionChange)="applyAdvancedFilter()">
+            <mat-option value="">Todos los sensores</mat-option>
+            <mat-option *ngFor="let sensor of sensores" [value]="sensor.value">
+              {{ sensor.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Filtro por estado -->
+        <mat-form-field appearance="outline">
+          <mat-label>Estado</mat-label>
+          <mat-select [(ngModel)]="selectedEstado" (selectionChange)="applyAdvancedFilter()">
+            <mat-option value="">Todos los estados</mat-option>
+            <mat-option *ngFor="let estado of estados" [value]="estado.value">
+              {{ estado.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Filtro por fecha desde -->
+        <mat-form-field appearance="outline">
+          <mat-label>Desde</mat-label>
+          <input matInput [matDatepicker]="pickerFrom" [(ngModel)]="selectedDateFrom" (dateChange)="applyAdvancedFilter()">
+          <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFrom></mat-datepicker>
+        </mat-form-field>
+
+        <!-- Filtro por fecha hasta -->
+        <mat-form-field appearance="outline">
+          <mat-label>Hasta</mat-label>
+          <input matInput [matDatepicker]="pickerTo" [(ngModel)]="selectedDateTo" (dateChange)="applyAdvancedFilter()">
+          <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+          <mat-datepicker #pickerTo></mat-datepicker>
+        </mat-form-field>
+
+        <!-- Botón limpiar filtros -->
+        <button mat-raised-button color="accent" (click)="clearFilters()">
+          <mat-icon>clear</mat-icon>
+          Limpiar Filtros
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Tabla de datos -->
+  <mat-card class="table-card">
+    <mat-card-header>
+      <div class="table-header">
+        <div class="table-title-section">
+          <mat-card-title>Lecturas de Sensores</mat-card-title>
+          <mat-card-subtitle>
+            <span *ngIf="dataSource.filteredData.length !== dataSource.data.length" class="filter-indicator">
+              (filtrados)
+            </span>
+          </mat-card-subtitle>
+        </div>
+        <div class="table-actions">
+          <button mat-raised-button color="primary" (click)="toggleFilters()" class="toggle-filters-btn">
+            <mat-icon>{{ showFilters ? 'filter_list_off' : 'filter_list' }}</mat-icon>
+            <span>{{ showFilters ? 'Ocultar' : 'Filtros' }}</span>
+          </button>
+        </div>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="table-container">
+        <mat-table [dataSource]="dataSource" matSort class="data-table">
+          <!-- ID -->
+          <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element.id }}</mat-cell>
+          </ng-container>
+
+          <!-- Usuario -->
+          <ng-container matColumnDef="usuario_nombre">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Usuario</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element.usuario_nombre }}</mat-cell>
+          </ng-container>
+
+          <!-- Sensor -->
+          <ng-container matColumnDef="sensor_nombre">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Sensor</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element.sensor_nombre }}</mat-cell>
+          </ng-container>
+
+          <!-- Valor -->
+          <ng-container matColumnDef="valor">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Valor (ppm)</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <span class="valor-cell">{{ element.valor | number:'1.2-2' }}</span>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Estado -->
+          <ng-container matColumnDef="estado">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Estado</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <mat-chip
+                selected
+                [ngClass]="{
+                  'estado-bueno': element.estado === 'Bueno',
+                  'estado-advertencia': element.estado === 'Advertencia',
+                  'estado-malo': element.estado === 'Malo'
+                }"
+              >
+                <mat-icon matChipAvatar>{{ getEstadoIcon(element.estado) }}</mat-icon>
+                {{ element.estado }}
+              </mat-chip>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Fecha -->
+          <ng-container matColumnDef="fecha_lectura">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.fecha_lectura | date:'dd/MM/yyyy HH:mm' }}
+            </mat-cell>
+          </ng-container>
+
+          <!-- Acciones -->
+          <ng-container matColumnDef="acciones">
+            <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <button mat-icon-button color="primary" class="action-btn edit" (click)="editItem(element)" title="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" class="action-btn delete" (click)="deleteItem(element)" title="Eliminar">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+
+
+        <!-- Paginador -->
+        <mat-paginator 
+          [pageSize]="25" 
+          [pageSizeOptions]="[10, 25, 50, 100]" 
+          showFirstLastButtons>
+        </mat-paginator>
+
+        <!-- Spinner de carga -->
+        <div *ngIf="isLoading" class="loading-container">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p>Cargando datos...</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Modal de edición -->
+  <div *ngIf="isEditing && currentItem" class="edit-modal-overlay" (click)="cancelEdit()">
+    <div class="edit-modal" (click)="$event.stopPropagation()">
+      <div class="edit-header">
+        <h3>Editar Lectura</h3>
+        <button mat-icon-button (click)="cancelEdit()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      
+      <div class="edit-content">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Valor (ppm)</mat-label>
+          <input matInput type="number" [(ngModel)]="currentItem.valor" step="0.01">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Fecha de Lectura</mat-label>
+          <input matInput [matDatepicker]="editPicker" [(ngModel)]="currentItem.fecha_lectura">
+          <mat-datepicker-toggle matSuffix [for]="editPicker"></mat-datepicker-toggle>
+          <mat-datepicker #editPicker></mat-datepicker>
+        </mat-form-field>
+
+        <div class="edit-info">
+          <p><strong>Usuario:</strong> {{ currentItem.usuario_nombre }}</p>
+          <p><strong>Sensor:</strong> {{ currentItem.sensor_nombre }}</p>
+          <p><strong>Estado actual:</strong> 
+            <mat-chip
+              selected
+              [ngClass]="{
+                'estado-bueno': currentItem.estado === 'Bueno',
+                'estado-advertencia': currentItem.estado === 'Advertencia',
+                'estado-malo': currentItem.estado === 'Malo'
+              }"
+            >
+              <mat-icon matChipAvatar>{{ getEstadoIcon(currentItem.estado) }}</mat-icon>
+              {{ currentItem.estado }}
+            </mat-chip>
+          </p>
+        </div>
+      </div>
+
+      <div class="edit-actions">
+        <button mat-button (click)="cancelEdit()">Cancelar</button>
+        <button mat-raised-button color="primary" (click)="saveEdit()" [disabled]="isLoading">
+          <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+          <span *ngIf="!isLoading">Guardar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

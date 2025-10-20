@@ -1,0 +1,18 @@
+
+<ng-container *ngIf="isHomePage() && !bootBlocking">
+  <app-navbar (loginClick)="openLogin()" (registerClick)="openRegister()"></app-navbar>
+  <app-project-info></app-project-info>
+  <app-carousel></app-carousel>
+  <app-footer></app-footer>
+</ng-container>
+
+<div *ngIf="bootBlocking" style="display:flex;align-items:center;justify-content:center;height:100vh;background:#fff;">
+  <mat-progress-spinner mode="indeterminate" diameter="64" color="primary"></mat-progress-spinner>
+  <div style="margin-left:16px;font-weight:600;color:#374151;">Cargando...</div>
+  
+</div>
+
+<router-outlet *ngIf="!bootBlocking"></router-outlet>
+
+<!-- Componente de notificaciones global -->
+<app-notification></app-notification>

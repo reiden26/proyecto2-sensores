@@ -1,0 +1,227 @@
+<section class="sensors-wrapper">
+  <div class="sensors-container">
+    <header class="sensors-header">
+      <div class="header-left">
+        <h2></h2>
+        <div class="capture-status" [class]="getCaptureStatus().class">
+          <mat-icon class="status-icon">{{ getCaptureStatus().icon }}</mat-icon>
+          <span class="status-text">{{ getCaptureStatus().text }}</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Estadísticas generales -->
+    <div class="stats-section">
+      <mat-card class="stats-card">
+        <mat-card-content>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <mat-icon class="stat-icon">sensors</mat-icon>
+              <div class="stat-content">
+                <span class="stat-value">{{ getActiveSensorsCount() }}</span>
+                <span class="stat-label">Sensores Activos</span>
+              </div>
+            </div>
+            <div class="stat-item">
+              <mat-icon class="stat-icon">trending_up</mat-icon>
+              <div class="stat-content">
+                <span class="stat-value">{{ getAverageValue() }}</span>
+                <span class="stat-label">Promedio General</span>
+              </div>
+            </div>
+            <div class="stat-item">
+              <mat-icon class="stat-icon">schedule</mat-icon>
+              <div class="stat-content">
+                <span class="stat-value">{{ getLastUpdate() }}</span>
+                <span class="stat-label">Última Actualización</span>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Sensores en layout horizontal -->
+    <div class="sensors-horizontal">
+      <mat-card class="sensor-card" *ngFor="let s of sensors" [class.inactive]="!s.active" [class.not-assigned]="s.assigned === false">
+        <mat-card-header>
+          <div class="sensor-header-content">
+            <div class="sensor-icon">{{ s.icon }}</div>
+            <div class="sensor-info">
+              <mat-card-title>{{ s.name }}</mat-card-title>
+              <mat-card-subtitle>{{ s.description }}</mat-card-subtitle>
+            </div>
+            <mat-slide-toggle 
+              [checked]="s.active" 
+              [disabled]="s.assigned === false"
+              (change)="toggleSensor(s, $event)"
+              class="sensor-toggle">
+            </mat-slide-toggle>
+          </div>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="sensor-value">
+            <span class="value" *ngIf="s.active && s.value !== null">{{ s.value }}</span>
+            <span class="unit" *ngIf="s.active && s.value !== null">{{ s.unit }}</span>
+            <span class="offline" *ngIf="s.assigned === false">No asignado</span>
+            <span class="offline" *ngIf="s.assigned !== false && !s.active">Sensor inactivo</span>
+          </div>
+          <div class="sensor-status" [class]="getSensorStatus(s)">
+            <mat-icon class="status-icon">{{ getStatusIcon(s) }}</mat-icon>
+            <span class="status-text">{{ getStatusText(s) }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Acciones rápidas -->
+    <div class="actions-section">
+      <mat-card class="actions-card">
+        <mat-card-header>
+          <mat-card-title>Acciones Rápidas</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="actions-grid">
+            <button mat-raised-button color="accent" (click)="activateAllSensors()">
+              <mat-icon>power</mat-icon>
+              Activar Todos
+            </button>
+            <button mat-raised-button color="warn" (click)="deactivateAllSensors()">
+              <mat-icon>power_off</mat-icon>
+              Desactivar Todos
+            </button>
+            <button mat-stroked-button (click)="viewHistory()">
+              <mat-icon>history</mat-icon>
+              Ver Sesión
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</section>
+
+<!-- Modal de Historial -->
+<ng-template #historyModal>
+  <div class="modal-header">
+    <h2 mat-dialog-title>
+      <mat-icon>history</mat-icon>
+      Historial de Última Sesión
+    </h2>
+    <button mat-icon-button mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  
+  <mat-dialog-content class="modal-content">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <mat-slide-toggle [(ngModel)]="includeCharts" (change)="renderSessionCharts()">
+        Incluir gráficos en el reporte
+      </mat-slide-toggle>
+    </div>
+
+    <div class="session-info">
+      <div class="info-item">
+        <mat-icon>schedule</mat-icon>
+        <span><strong>Inicio:</strong> {{ lastSessionData?.startTime | date:'dd/MM/yyyy HH:mm:ss' }}</span>
+      </div>
+      <div class="info-item" *ngIf="lastSessionData?.endTime">
+        <mat-icon>schedule</mat-icon>
+        <span><strong>Fin:</strong> {{ lastSessionData?.endTime | date:'dd/MM/yyyy HH:mm:ss' }}</span>
+      </div>
+      <div class="info-item">
+        <mat-icon>timer</mat-icon>
+        <span><strong>Duración:</strong> {{ lastSessionData?.duration }}</span>
+      </div>
+      <div class="info-item">
+        <mat-icon>sensors</mat-icon>
+        <span><strong>Sensores Activos:</strong> {{ lastSessionData?.activeSensors }}</span>
+      </div>
+      <div class="info-item">
+        <mat-icon>assessment</mat-icon>
+        <span><strong>Total Lecturas:</strong> {{ lastSessionData?.totalReadings }}</span>
+      </div>
+    </div>
+
+    <div class="sensor-summary">
+      <h3>Resumen por Sensor</h3>
+      <div class="summary-grid">
+        <div class="summary-card" *ngFor="let sensor of lastSessionData?.sensorSummary">
+          <div class="sensor-header">
+            <mat-icon>{{ sensor.icon }}</mat-icon>
+            <span>{{ sensor.name }}</span>
+          </div>
+          <div class="sensor-stats">
+            <div class="stat">
+              <span class="label">Lecturas:</span>
+              <span class="value">{{ sensor.readings }}</span>
+            </div>
+            <div class="stat">
+              <span class="label">Promedio:</span>
+              <span class="value">{{ sensor.average }} ppm</span>
+            </div>
+            <div class="stat">
+              <span class="label">Máximo:</span>
+              <span class="value">{{ sensor.max }} ppm</span>
+            </div>
+            <div class="stat">
+              <span class="label">Mínimo:</span>
+              <span class="value">{{ sensor.min }} ppm</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="recent-readings">
+      <h3>Últimas 10 Lecturas</h3>
+      <div *ngIf="includeCharts && lastSessionData" style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:12px">
+        <canvas id="chart-mq135" style="width:100%;height:200px"></canvas>
+        <canvas id="chart-mq7" style="width:100%;height:200px"></canvas>
+        <canvas id="chart-mq4" style="width:100%;height:200px"></canvas>
+      </div>
+      <div class="readings-table">
+        <div class="table-header">
+          <span>Sensor</span>
+          <span>Valor</span>
+          <span>Estado</span>
+          <span>Fecha</span>
+        </div>
+        <div class="table-row" *ngFor="let reading of lastSessionData?.recentReadings">
+          <div class="sensor-cell">
+            <mat-icon>{{ reading.sensorIcon }}</mat-icon>
+            <span>{{ reading.sensorName }}</span>
+          </div>
+          <div class="value-cell">{{ reading.value }} ppm</div>
+          <div class="status-cell">
+            <span class="status-badge" [class]="'status-' + reading.status.toLowerCase()">
+              {{ reading.status }}
+            </span>
+          </div>
+          <div class="date-cell">{{ reading.timestamp | date:'HH:mm:ss' }}</div>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+  
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cerrar</button>
+    <button mat-stroked-button (click)="exportSessionData('json')" [disabled]="includeCharts" title="Deshabilitado cuando se incluyen gráficos">
+      <mat-icon>code</mat-icon>
+      JSON
+    </button>
+    <button mat-stroked-button (click)="exportSessionData('csv')" [disabled]="includeCharts" title="Deshabilitado cuando se incluyen gráficos">
+      <mat-icon>table_chart</mat-icon>
+      CSV
+    </button>
+    <button mat-stroked-button (click)="exportSessionData('excel')">
+      <mat-icon>description</mat-icon>
+      Excel
+    </button>
+    <button mat-stroked-button (click)="exportSessionData('pdf')">
+      <mat-icon>picture_as_pdf</mat-icon>
+      PDF
+    </button>
+  </mat-dialog-actions>
+</ng-template>

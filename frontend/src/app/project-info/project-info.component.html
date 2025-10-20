@@ -1,0 +1,89 @@
+<section class="project-info-section">
+  <div class="project-info-container">
+    <!-- Header -->
+    <div class="project-header">
+      <div class="header-content">
+        <div class="header-text">
+          <h1 class="project-title">Proyecto II ESP32</h1>
+          <p class="project-subtitle">
+            Sistema para el monitoreo ambiental de calidad de aire en zonas de operación de Cerrejón
+          </p>
+        </div>
+        <div class="hero-visual">
+          <div class="device-mockup">
+            <div class="device-screen">
+              <div class="screen-content">
+                <div class="data-points">
+                  <div class="data-point" *ngFor="let point of dataPoints">
+                    <div class="point-value">{{ point.value }}</div>
+                    <div class="point-label">{{ point.label }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="features-grid">
+      <div class="feature-card" *ngFor="let feature of projectFeatures">
+        <div class="feature-icon">
+          <mat-icon [ngStyle]="{ color: feature.color }">{{ feature.icon }}</mat-icon>
+        </div>
+        <h3 class="feature-title">{{ feature.title }}</h3>
+        <p class="feature-description">{{ feature.description }}</p>
+      </div>
+    </div>
+
+    
+    <div class="tech-section" id="tech-section">
+      <div class="tech-header">
+        <h2 class="tech-title">Stack Tecnológico</h2>
+        <p class="tech-subtitle">Tecnologías utilizadas en el desarrollo del proyecto</p>
+      </div>
+      <div class="tech-categories">
+        <div class="tech-category">
+          <div class="category-icon">
+            <mat-icon>developer_board</mat-icon>
+          </div>
+          <h3 class="category-title">Hardware</h3>
+          <div class="tech-badges">
+            <span class="tech-badge hardware">ESP32</span>
+            <span class="tech-badge hardware">MQ-135</span>
+            <span class="tech-badge hardware">MQ-7</span>
+            <span class="tech-badge hardware">MQ-4</span>
+            <span class="tech-badge hardware">Protoboard</span>
+          </div>
+        </div>
+        <div class="tech-category">
+          <div class="category-icon">
+            <mat-icon>code</mat-icon>
+          </div>
+          <h3 class="category-title">Software</h3>
+          <div class="tech-badges">
+            <span class="tech-badge software">Angular</span>
+            <span class="tech-badge software">TypeScript</span>
+            <span class="tech-badge software">FastAPI</span>
+            <span class="tech-badge software">Python</span>
+            <span class="tech-badge software">SQLAlchemy</span>
+          </div>
+        </div>
+        <div class="tech-category">
+          <div class="category-icon">
+            <mat-icon>cloud</mat-icon>
+          </div>
+          <h3 class="category-title">IoT & Cloud</h3>
+          <div class="tech-badges">
+            <span class="tech-badge iot">WebSocket</span>
+            <span class="tech-badge iot">REST API</span>
+            <span class="tech-badge iot">JWT</span>
+            <span class="tech-badge iot">Tiempo Real</span>
+            <span class="tech-badge iot">Monitoreo</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

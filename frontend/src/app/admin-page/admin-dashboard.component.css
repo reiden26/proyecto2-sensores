@@ -1,0 +1,945 @@
+/* Variables CSS para sistema de colores cohesivo */
+:root {
+  --admin-primary: #1e3a8a;
+  --admin-primary-light: #3b82f6;
+  --admin-accent: #8b5cf6;
+  --admin-background: #f8fafc;
+  --admin-surface: #ffffff;
+  --admin-text-primary: #1f2937;
+  --admin-text-secondary: #6b7280;
+  --admin-border: rgba(59, 130, 246, 0.1);
+  --admin-shadow: rgba(0, 0, 0, 0.08);
+  --admin-shadow-hover: rgba(59, 130, 246, 0.15);
+  --admin-gradient: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-primary-light) 70%, #2563eb 100%);
+  --admin-gradient-light: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+}
+
+.admin-dashboard {
+  min-height: 100vh;
+  background: #f8fafc;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Ocultar completamente el footer en admin */
+.admin-dashboard app-footer {
+  display: none !important;
+}
+
+/* Ocultar cualquier elemento que pueda causar franjas en admin */
+.admin-dashboard .footer,
+.admin-dashboard .mat-sidenav-content .footer,
+.admin-dashboard .main-content .footer {
+  display: none !important;
+}
+
+/* Asegurar que el contenido principal ocupe todo el espacio disponible */
+.admin-dashboard .mat-sidenav-content {
+  background: #f8fafc !important;
+  min-height: calc(100vh - 80px) !important;
+}
+
+/* Ocultar cualquier pseudo-elemento que pueda estar causando la franja */
+.admin-dashboard::before,
+.admin-dashboard::after {
+  display: none !important;
+}
+
+/* Contenedor Sidenav Material */
+.sidenav-container {
+  height: calc(100vh - 80px);
+  margin-top: 80px;
+  background: #f8fafc;
+}
+
+/* Sidebar Material con glassmorphism mejorado */
+.glass-sidenav {
+  width: 320px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+  border-right: 1px solid rgba(156, 163, 175, 0.3) !important;
+  border-left: 1px solid rgba(156, 163, 175, 0.1) !important;
+  box-shadow: 8px 0 32px rgba(0, 0, 0, 0.08), inset -1px 0 0 rgba(156, 163, 175, 0.2) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  backdrop-filter: blur(20px);
+}
+
+/* Evitar fondo blanco interno del contenedor del drawer */
+:host ::ng-deep .glass-sidenav .mat-drawer-inner-container {
+  background: transparent !important;
+}
+
+/* Quitar fondo blanco por defecto en lista y wrapper internos */
+:host ::ng-deep .glass-sidenav mat-nav-list,
+:host ::ng-deep .glass-sidenav .mdc-list,
+:host ::ng-deep .glass-sidenav .mdc-list .mdc-list-item {
+  background: transparent !important;
+}
+
+.sidenav-header {
+  padding: 0;
+  border-bottom: 1px solid var(--admin-border);
+  position: relative;
+  height: 120px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 70%, #2563eb 100%);
+  box-shadow: 0 4px 20px var(--admin-shadow);
+}
+
+.admin-header-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.admin-header-image:hover {
+  opacity: 1;
+}
+
+.toggle-button {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(15px);
+  border-radius: 50% !important;
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
+  z-index: 10;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.toggle-button:hover {
+  background: rgba(255, 255, 255, 1) !important;
+  transform: translateY(-50%) scale(1.1) !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25) !important;
+}
+
+:host ::ng-deep .toggle-button .mat-mdc-button-touch-target {
+  display: none !important;
+}
+
+:host ::ng-deep .toggle-button .mat-icon {
+  color: var(--admin-primary) !important;
+  line-height: 1 !important;
+  font-size: 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+
+/* Navigation List */
+.navigation-list {
+  padding: 1rem 0.5rem 1rem 0.5rem;
+  margin-top: 1rem;
+}
+
+/* Mat-List items */
+:host ::ng-deep .mat-mdc-list-item { 
+  background: #ffffff !important;
+  color: #1f2937 !important; 
+  margin: 8px 8px !important;
+  border-radius: 16px !important;
+  border: 1px solid var(--admin-border) !important;
+  box-shadow: 0 2px 12px var(--admin-shadow) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+:host ::ng-deep .mdc-list-item__content {
+  gap: 18px;
+  padding: 18px 20px !important;
+  position: relative;
+  z-index: 1;
+  font-weight: 500;
+}
+
+:host ::ng-deep .mat-mdc-list-item:hover { 
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 70%, #2563eb 100%) !important; 
+  border-color: #3b82f6 !important;
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3) !important;
+  transform: translateY(-3px) !important;
+  color: #ffffff !important;
+}
+
+:host ::ng-deep .mat-mdc-list-item:hover mat-icon {
+  color: #ffffff !important;
+  transform: scale(1.15) !important;
+}
+
+::host ::ng-deep .mat-mdc-list-item:hover .mdc-list-item__content {
+  background: transparent !important;
+  color: #ffffff !important;
+}
+
+::host ::ng-deep .mat-mdc-list-item:hover .mdc-list-item__primary-text {
+  color: #ffffff !important;
+}
+
+/* Forzar hover con selectores más específicos */
+::host ::ng-deep .mat-mdc-list-item:hover * {
+  color: #ffffff !important;
+}
+
+::host ::ng-deep .mat-mdc-list-item:hover .mdc-list-item__content * {
+  color: #ffffff !important;
+}
+
+::host ::ng-deep .mat-mdc-list-item:hover .mdc-list-item__primary-text * {
+  color: #ffffff !important;
+}
+
+/* Forzar el fondo del hover */
+::host ::ng-deep .mat-mdc-list-item:hover,
+::host ::ng-deep .mat-mdc-list-item:hover .mdc-list-item__content,
+::host ::ng-deep .mat-mdc-list-item:hover .mdc-list-item__primary-text {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 70%, #2563eb 100%) !important;
+}
+
+/* Forzar iconos en hover */
+::host ::ng-deep .mat-mdc-list-item:hover mat-icon,
+::host ::ng-deep .mat-mdc-list-item:hover .mdc-list-item__content mat-icon {
+  color: #ffffff !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+}
+
+:host ::ng-deep a.mat-mdc-list-item.active { 
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 70%, #2563eb 100%) !important; 
+  border: 1px solid var(--admin-primary-light) !important;
+  box-shadow: 0 12px 40px var(--admin-shadow-hover) !important;
+  transform: translateY(-3px) !important;
+  color: #ffffff !important;
+  position: relative;
+}
+
+:host ::ng-deep a.mat-mdc-list-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background: linear-gradient(135deg, #ffffff, rgba(255, 255, 255, 0.7));
+  border-radius: 0 2px 2px 0;
+}
+
+:host ::ng-deep a.mat-mdc-list-item.active mat-icon {
+  color: #ffffff !important;
+  transform: scale(1.2) !important;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+:host ::ng-deep .mat-mdc-list-item mat-icon {
+  color: #6b7280 !important;
+  transition: all 0.3s ease !important;
+  font-size: 22px !important;
+  width: 22px !important;
+  height: 22px !important;
+}
+
+/* Eliminar cualquier borde lateral que pueda aparecer */
+:host ::ng-deep .mat-mdc-list-item,
+:host ::ng-deep .mat-mdc-list-item::before,
+:host ::ng-deep .mat-mdc-list-item::after,
+:host ::ng-deep .mdc-list-item,
+:host ::ng-deep .mdc-list-item::before,
+:host ::ng-deep .mdc-list-item::after {
+  border-left: none !important;
+  border-right: none !important;
+}
+
+/* Asegurar que no haya pseudo-elementos creando barras */
+:host ::ng-deep .mat-mdc-list-item::before,
+:host ::ng-deep .mat-mdc-list-item::after {
+  display: none !important;
+}
+
+/* Sección de logout en la parte inferior */
+.logout-section {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+
+.logout-button {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+  color: #ffffff !important;
+  border-radius: 16px !important;
+  width: calc(100% - 2rem) !important;
+  height: 60px !important;
+  min-width: auto !important;
+  box-shadow: 0 8px 24px rgba(220, 38, 38, 0.4) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative;
+  overflow: hidden;
+  margin: 0 1rem !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  font-weight: 600 !important;
+}
+
+.logout-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.logout-button:hover::before {
+  left: 100%;
+}
+
+.logout-button:hover {
+  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%) !important;
+  transform: translateY(-4px) scale(1.02) !important;
+  box-shadow: 0 12px 40px rgba(220, 38, 38, 0.6) !important;
+}
+
+:host ::ng-deep .logout-button mat-icon {
+  color: #ffffff !important;
+  font-size: 26px !important;
+  transition: transform 0.3s ease !important;
+}
+
+.logout-button:hover :host ::ng-deep .logout-button mat-icon {
+  transform: rotate(180deg) !important;
+}
+
+/* Contenido principal */
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  transition: all 0.3s ease;
+}
+
+.content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Forzar fondo con gradiente para evitar blanco del contenido */
+:host ::ng-deep .mat-sidenav-content,
+:host ::ng-deep .mat-drawer-content { background: #f8fafc !important; }
+
+/* FAB para reabrir el sidenav */
+.sidenav-fab {
+  position: fixed;
+  left: 20px;
+  top: 100px;
+  z-index: 2000;
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 70%, #2563eb 100%) !important;
+  color: white !important;
+  box-shadow: 0 12px 32px rgba(59, 130, 246, 0.4) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(10px);
+}
+
+.sidenav-fab:hover {
+  transform: scale(1.15) !important;
+  box-shadow: 0 16px 48px rgba(59, 130, 246, 0.6) !important;
+}
+
+/* Animaciones adicionales mejoradas */
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.nav-item {
+  animation: slideInFromLeft 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Estilos para estado normal de nav-item */
+::host ::ng-deep .nav-item {
+  background: #ffffff !important;
+  color: #1f2937 !important;
+}
+
+::host ::ng-deep .nav-item mat-icon,
+::host ::ng-deep .nav-item [matListItemIcon] {
+  color: #6b7280 !important;
+}
+
+::host ::ng-deep .nav-item span,
+::host ::ng-deep .nav-item [matListItemTitle] {
+  color: #1f2937 !important;
+}
+
+/* Estilos específicos para nav-item */
+::host ::ng-deep .nav-item:hover {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 70%, #2563eb 100%) !important;
+  color: #ffffff !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3) !important;
+}
+
+::host ::ng-deep .nav-item:hover mat-icon {
+  color: #ffffff !important;
+  transform: scale(1.15) !important;
+}
+
+::host ::ng-deep .nav-item:hover span {
+  color: #ffffff !important;
+}
+
+::host ::ng-deep .nav-item:hover .mdc-list-item__content {
+  background: transparent !important;
+  color: #ffffff !important;
+}
+
+::host ::ng-deep .nav-item:hover .mdc-list-item__primary-text {
+  color: #ffffff !important;
+}
+
+/* Estilos específicos para matListItemIcon y matListItemTitle */
+::host ::ng-deep .nav-item:hover [matListItemIcon] {
+  color: #ffffff !important;
+  transform: scale(1.15) !important;
+}
+
+::host ::ng-deep .nav-item:hover [matListItemTitle] {
+  color: #ffffff !important;
+}
+
+/* Forzar todos los elementos internos en hover */
+::host ::ng-deep .nav-item:hover * {
+  color: #ffffff !important;
+}
+
+/* Estilos para estado activo de nav-item */
+.custom-nav-item.active,
+::host ::ng-deep .custom-nav-item.active,
+::host ::ng-deep .nav-item.active {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 70%, #2563eb 100%) !important;
+  color: #ffffff !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 12px 40px rgba(59, 130, 246, 0.4) !important;
+}
+
+.custom-nav-item.active mat-icon,
+::host ::ng-deep .custom-nav-item.active mat-icon,
+::host ::ng-deep .nav-item.active mat-icon {
+  color: #ffffff !important;
+  transform: scale(1.2) !important;
+}
+
+.custom-nav-item.active span,
+::host ::ng-deep .custom-nav-item.active span,
+::host ::ng-deep .nav-item.active span {
+  color: #ffffff !important;
+}
+
+.custom-nav-item.active *,
+::host ::ng-deep .custom-nav-item.active *,
+::host ::ng-deep .nav-item.active * {
+  color: #ffffff !important;
+}
+
+/* Estilos adicionales para estado activo */
+::host ::ng-deep .custom-nav-item.active .mdc-list-item__content {
+  background: transparent !important;
+  color: #ffffff !important;
+}
+
+::host ::ng-deep .custom-nav-item.active .mdc-list-item__primary-text {
+  color: #ffffff !important;
+}
+
+::host ::ng-deep .custom-nav-item.active [matListItemIcon] {
+  color: #ffffff !important;
+  transform: scale(1.2) !important;
+}
+
+::host ::ng-deep .custom-nav-item.active [matListItemTitle] {
+  color: #ffffff !important;
+}
+
+/* Estilos globales directos para estado activo */
+.mat-mdc-list-item.custom-nav-item.active {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 70%, #2563eb 100%) !important;
+  color: #ffffff !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 12px 40px rgba(59, 130, 246, 0.4) !important;
+}
+
+.mat-mdc-list-item.custom-nav-item.active mat-icon {
+  color: #ffffff !important;
+  transform: scale(1.2) !important;
+}
+
+.mat-mdc-list-item.custom-nav-item.active span {
+  color: #ffffff !important;
+}
+
+.mat-mdc-list-item.custom-nav-item.active .mdc-list-item__content {
+  background: transparent !important;
+  color: #ffffff !important;
+}
+
+.mat-mdc-list-item.custom-nav-item.active .mdc-list-item__primary-text {
+  color: #ffffff !important;
+}
+
+.mat-mdc-list-item.custom-nav-item.active [matListItemIcon] {
+  color: #ffffff !important;
+  transform: scale(1.2) !important;
+}
+
+.mat-mdc-list-item.custom-nav-item.active [matListItemTitle] {
+  color: #ffffff !important;
+}
+
+
+/* Estilos ultra específicos para forzar el hover */
+::host ::ng-deep mat-nav-list .nav-item:hover,
+::host ::ng-deep mat-nav-list .nav-item:hover .mdc-list-item__content,
+::host ::ng-deep mat-nav-list .nav-item:hover .mdc-list-item__primary-text {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 70%, #2563eb 100%) !important;
+  color: #ffffff !important;
+}
+
+::host ::ng-deep mat-nav-list .nav-item:hover mat-icon,
+::host ::ng-deep mat-nav-list .nav-item:hover [matListItemIcon] {
+  color: #ffffff !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+::host ::ng-deep mat-nav-list .nav-item:hover span,
+::host ::ng-deep mat-nav-list .nav-item:hover [matListItemTitle] {
+  color: #ffffff !important;
+}
+
+/* Estilos globales para forzar el hover */
+.nav-item:hover {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 70%, #2563eb 100%) !important;
+  color: #ffffff !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3) !important;
+}
+
+.nav-item:hover mat-icon {
+  color: #ffffff !important;
+  transform: scale(1.15) !important;
+}
+
+.nav-item:hover span {
+  color: #ffffff !important;
+}
+
+/* Estilos globales más específicos para Angular Material */
+.mat-mdc-list-item.nav-item:hover {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 70%, #2563eb 100%) !important;
+  color: #ffffff !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3) !important;
+}
+
+.mat-mdc-list-item.nav-item:hover mat-icon {
+  color: #ffffff !important;
+  transform: scale(1.15) !important;
+}
+
+.mat-mdc-list-item.nav-item:hover span {
+  color: #ffffff !important;
+}
+
+.mat-mdc-list-item.nav-item:hover .mdc-list-item__content {
+  background: transparent !important;
+  color: #ffffff !important;
+}
+
+.mat-mdc-list-item.nav-item:hover .mdc-list-item__primary-text {
+  color: #ffffff !important;
+}
+
+/* Estilos para estado normal de nav-item */
+.nav-item {
+  background: #ffffff !important;
+  color: #1f2937 !important;
+}
+
+/* Estilos para custom-nav-item */
+.custom-nav-item:hover {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 70%, #2563eb 100%) !important;
+  color: #ffffff !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3) !important;
+}
+
+.custom-nav-item:hover mat-icon {
+  color: #ffffff !important;
+  transform: scale(1.15) !important;
+}
+
+.custom-nav-item:hover span {
+  color: #ffffff !important;
+}
+
+.nav-item:nth-child(1) { animation-delay: 0.1s; }
+.nav-item:nth-child(2) { animation-delay: 0.2s; }
+.nav-item:nth-child(3) { animation-delay: 0.3s; }
+.nav-item:nth-child(4) { animation-delay: 0.4s; }
+.nav-item:nth-child(5) { animation-delay: 0.5s; }
+
+/* Efecto shimmer en hover para elementos activos */
+:host ::ng-deep a.mat-mdc-list-item.active::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: shimmer 2s infinite;
+}
+
+/* Efecto de pulso para el botón de toggle */
+.toggle-button:focus {
+  animation: pulse 2s infinite;
+}
+
+/* Responsive mejorado */
+@media (max-width: 1024px) {
+  .glass-sidenav {
+    width: 280px;
+  }
+  
+  .sidenav-fab {
+    left: 16px;
+    top: 96px;
+  }
+}
+
+@media (max-width: 768px) {
+  .glass-sidenav {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .sidenav-header {
+    height: 100px;
+  }
+  
+  .navigation-list {
+    padding: 0.75rem 0.25rem;
+  }
+  
+  :host ::ng-deep .mat-mdc-list-item {
+    margin: 6px 6px !important;
+  }
+  
+  :host ::ng-deep .mdc-list-item__content {
+    padding: 14px 16px !important;
+    gap: 14px;
+  }
+  
+  .logout-button {
+    height: 56px !important;
+    margin: 0 0.75rem !important;
+  }
+  
+  .sidenav-fab {
+    left: 12px;
+    top: 92px;
+    width: 48px !important;
+    height: 48px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .glass-sidenav {
+    width: 100%;
+  }
+  
+  .sidenav-header {
+    height: 80px;
+  }
+  
+  .navigation-list {
+    padding: 0.5rem 0.25rem;
+  }
+  
+  :host ::ng-deep .mat-mdc-list-item {
+    margin: 4px 4px !important;
+    border-radius: 12px !important;
+  }
+  
+  :host ::ng-deep .mdc-list-item__content {
+    padding: 12px 14px !important;
+    gap: 12px;
+  }
+  
+  :host ::ng-deep .mat-mdc-list-item mat-icon {
+    font-size: 20px !important;
+    width: 20px !important;
+    height: 20px !important;
+  }
+  
+  .logout-button {
+    height: 52px !important;
+    margin: 0 0.5rem !important;
+    border-radius: 12px !important;
+  }
+  
+  .sidenav-fab {
+    left: 8px;
+    top: 88px;
+    width: 44px !important;
+    height: 44px !important;
+  }
+  
+  .toggle-button {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    right: 8px;
+  }
+}
+
+/* Modal de confirmación de logout mejorado */
+.confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.confirm-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 0;
+  max-width: 450px;
+  width: 90%;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.confirm-header {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 70%, #2563eb 100%);
+  padding: 2rem 2rem 1.5rem 2rem;
+  text-align: center;
+  color: white;
+}
+
+.confirm-icon {
+  width: 64px;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem auto;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.confirm-icon mat-icon {
+  font-size: 32px;
+  color: white;
+}
+
+.confirm-header h4 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.confirm-body {
+  padding: 2rem;
+  text-align: center;
+}
+
+.confirm-body p {
+  margin: 0 0 1rem 0;
+  color: #374151;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.confirm-warning {
+  color: #6b7280 !important;
+  font-size: 0.9rem !important;
+  font-style: italic;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 1rem;
+  padding: 0 2rem 2rem 2rem;
+  justify-content: center;
+}
+
+.btn-cancel,
+.btn-confirm {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  cursor: pointer;
+  min-width: 140px;
+  justify-content: center;
+}
+
+.btn-cancel {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.btn-cancel:hover {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-confirm {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  color: white;
+  box-shadow: 0 4px 16px rgba(220, 38, 38, 0.3);
+}
+
+.btn-confirm:hover {
+  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+}
+
+.btn-cancel mat-icon,
+.btn-confirm mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+/* Responsive para el modal */
+@media (max-width: 480px) {
+  .confirm-card {
+    width: 95%;
+    margin: 1rem;
+  }
+  
+  .confirm-header {
+    padding: 1.5rem 1.5rem 1rem 1.5rem;
+  }
+  
+  .confirm-icon {
+    width: 56px;
+    height: 56px;
+  }
+  
+  .confirm-icon mat-icon {
+    font-size: 28px;
+  }
+  
+  .confirm-header h4 {
+    font-size: 1.25rem;
+  }
+  
+  .confirm-body {
+    padding: 1.5rem;
+  }
+  
+  .confirm-actions {
+    flex-direction: column;
+    padding: 0 1.5rem 1.5rem 1.5rem;
+  }
+  
+  .btn-cancel,
+  .btn-confirm {
+    width: 100%;
+  }
+}

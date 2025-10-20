@@ -1,0 +1,332 @@
+/* Wrapper del carrusel - usa el fondo del body */
+.carousel-wrapper {
+  background: #ffffff;
+  padding: 4rem 2rem;
+  margin-bottom: 6rem;
+  width: 100%;
+  color: #333333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-content-wrapper {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tools-header { 
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.tools-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  color: #2c3e50;
+  background: linear-gradient(135deg, #2c3e50 0%, var(--color-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.tools-subtitle {
+  font-size: 1.1rem;
+  color: #666666;
+  margin: 0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Estilos para el mat-card */
+.carousel-card {
+  background: rgba(255, 255, 255, 0.55) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.10) !important;
+  transition: box-shadow 0.2s ease, transform 0.2s ease !important;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  height: 420px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* mantiene la imagen dentro del card */
+  backdrop-filter: saturate(160%) blur(8px);
+}
+
+.back-to-top-fixed {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  background: #2c3e50;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  z-index: 1000;
+}
+
+.back-to-top-fixed:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(0,0,0,0.25); }
+
+.carousel-card:hover { 
+  transform: translateY(-3px) !important; 
+  box-shadow: 0 10px 28px rgba(0,0,0,0.12) !important; 
+}
+
+.carousel-container { 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  gap: 2rem; 
+  padding: 1.25rem; 
+  flex: 1;
+}
+
+.carousel-content { 
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  height: 100%; /* ocupa toda la altura disponible */
+}
+
+.carousel-img { 
+  width: 100%; 
+  height: 100%; 
+  object-fit: contain; 
+  border-radius: 0; 
+  box-shadow: none; 
+  cursor: zoom-in; 
+  transition: transform 0.3s ease; 
+}
+
+.carousel-img:hover { 
+  transform: scale(1.015); 
+  box-shadow: 0 10px 24px rgba(0,0,0,0.18); 
+}
+
+.carousel-desc { display: none; }
+
+/* Botones */
+.carousel-btn { 
+  background: #4CAF50 !important; 
+  color: #ffffff !important; 
+  border-radius: 50% !important; 
+  width: 44px !important; 
+  height: 44px !important; 
+  min-width: 44px !important; 
+  box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3) !important; 
+}
+
+.carousel-btn:hover { 
+  background: #45a049 !important; 
+  transform: scale(1.05) !important; 
+}
+
+.carousel-btn mat-icon { 
+  color: #ffffff !important; 
+  font-size: 24px !important; 
+  width: 24px !important; 
+  height: 24px !important; 
+}
+
+/* Layout dos columnas */
+.dual-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 2rem;
+  width: 100%;
+  align-items: stretch;
+}
+
+.cards-carousel {
+  position: relative;
+  background: rgba(255, 255, 255, 0.55) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.10) !important;
+  padding: 1rem 1rem 0.75rem 1rem;
+  overflow: hidden;
+  height: 420px;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: saturate(160%) blur(8px);
+}
+
+.cards-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem 0.5rem 0.75rem 0.5rem;
+}
+
+.cards-title {
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  color: #e8edf2;
+}
+
+.nav-btn {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-700)) !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 16px rgba(0, 137, 123, 0.25) !important;
+  transition: transform 0.15s ease, box-shadow 0.2s ease !important;
+}
+.nav-btn:hover { transform: translateY(-1px) scale(1.03); box-shadow: 0 10px 20px rgba(0, 137, 123, 0.32) !important; }
+.nav-btn:active { transform: translateY(0); box-shadow: 0 6px 12px rgba(0, 137, 123, 0.24) !important; }
+
+.card-viewport {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.tool-card-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  animation: cardFade 260ms ease;
+}
+
+.category-icon {
+  width: 64px;
+  height: 64px;
+  background: radial-gradient(120% 120% at 50% 10%, var(--color-primary) 0%, var(--color-primary-700) 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem auto;
+  box-shadow: 0 12px 28px rgba(0, 137, 123, 0.35);
+}
+
+.category-icon mat-icon {
+  font-size: 2.1rem;
+  width: 2.6rem;
+  height: 2.6rem;
+  line-height: 2.6rem;
+  color: #ffffff;
+}
+
+.category-title {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tech-badges { 
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 0.75rem; 
+  justify-content: center; 
+}
+
+.tech-badge { 
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  color: #ffffff;
+  background: linear-gradient(135deg, #4f46e5, #06b6d4);
+  box-shadow: 0 6px 14px rgba(79, 70, 229, 0.22);
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tech-badge:hover { transform: translateY(-2px); box-shadow: 0 10px 16px rgba(79, 70, 229, 0.28); }
+
+/* Dots indicators */
+.dots { 
+  display: flex; 
+  justify-content: center; 
+  gap: 8px; 
+  padding: 14px 0 10px; 
+}
+
+.dot { 
+  box-sizing: border-box; 
+  width: 12px; 
+  height: 12px; 
+  aspect-ratio: 1 / 1; 
+  border-radius: 50%; 
+  border: 1px solid rgba(0,0,0,0.06); 
+  background: #ffffff; 
+  cursor: pointer; 
+  transition: transform 0.2s ease, background 0.2s ease; 
+  display: inline-block; 
+  padding: 0; 
+  line-height: 0; 
+  -webkit-appearance: none; 
+  appearance: none; 
+}
+
+.dot.active { 
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-700)); 
+  border-color: transparent; 
+  transform: scale(1.2); 
+}
+/* Animaciones */
+@keyframes cardFade {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dot:hover { 
+  transform: scale(1.08); 
+}
+
+/* Responsive */
+@media (max-width: 768px) {  
+  .carousel-wrapper { 
+    padding: 3rem 1rem; 
+  }  
+  .carousel-container { 
+    flex-direction: column; 
+    gap: 1rem; 
+    padding: 1rem; 
+  }  
+  .carousel-content { 
+    flex-direction: column; 
+    text-align: center; 
+  }  
+  .cards-carousel { height: 320px; }
+  .carousel-card { height: 320px; }
+  .carousel-img { width: 100%; height: 100%; } 
+  .carousel-desc { 
+    max-width: 100%; 
+    font-size: 1rem; 
+  }  
+  .dual-layout {
+    grid-template-columns: 1fr;
+  }
+  .card-viewport { height: 100%; }
+}

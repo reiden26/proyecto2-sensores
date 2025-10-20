@@ -1,0 +1,53 @@
+<div class="carousel-wrapper" id="carousel-section">
+  <div class="carousel-content-wrapper">
+    <div class="tools-header">
+      <h2 class="tools-title">Componentes del Sistema</h2>
+      <p class="tools-subtitle">Elementos que conforman el sistema de monitoreo ambiental</p>
+    </div>
+    <div class="dual-layout">
+      <!-- Carrusel de tarjetas a la izquierda -->
+      <mat-card class="cards-carousel">
+        <div class="cards-header">
+          <button mat-icon-button class="nav-btn" aria-label="Anterior" (click)="prevCard()">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          <button mat-icon-button class="nav-btn" aria-label="Siguiente" (click)="nextCard()">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </div>
+        <div class="card-viewport">
+          <div class="tool-card-content">
+            <div class="category-icon">
+              <mat-icon>{{ toolCards[cardIndex].icon }}</mat-icon>
+            </div>
+            <h3 class="category-title">{{ toolCards[cardIndex].title }}</h3>
+            <div class="tech-badges">
+              <span class="tech-badge" *ngFor="let b of toolCards[cardIndex].badges">{{ b }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="dots">
+          <button class="dot" *ngFor="let c of toolCards; index as i" [class.active]="i===cardIndex" (click)="goToCard(i)" [attr.aria-label]="'Ir a card ' + (i+1)"></button>
+        </div>
+      </mat-card>
+
+      <!-- Carrusel de imágenes a la derecha -->
+      <mat-card class="carousel-card">
+        <div class="carousel-container">
+          <div class="carousel-content">
+            <img [src]="images[current].src" 
+                 alt="Imagen carrusel" 
+                 class="carousel-img"
+                 (click)="openZoomModal()"
+                 [title]="'Haz clic para ampliar'">
+          </div>
+        </div>
+        <div class="dots">
+          <button class="dot" *ngFor="let img of images; index as i" [class.active]="i===current" (click)="goTo(i)" [attr.aria-label]="'Ir a imagen ' + (i+1)"></button>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+
+  <button class="back-to-top-fixed" *ngIf="showBackToTop" aria-label="Volver arriba" (click)="scrollToTop()">↑</button>
+</div>

@@ -1,0 +1,50 @@
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme((
+    color: (
+      theme-type: light,
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
+/* Sobrescribir colores de botones de icono para forzar nuestros estilos */
+.mat-icon-button[color="primary"] .mat-icon {
+  color: #1976d2 !important;
+}
+
+.mat-icon-button[color="warn"] .mat-icon {
+  color: #e53935 !important;
+}
+
+.mat-icon-button[color="accent"] .mat-icon {
+  color: #9c27b0 !important;
+}
+
+/* Selectores específicos para tablas */
+.actions-cell .mat-icon-button[color="primary"] .mat-icon {
+  color: #1976d2 !important;
+}
+
+.actions-cell .mat-icon-button[color="warn"] .mat-icon {
+  color: #e53935 !important;
+}
+
+.actions-cell .mat-icon-button[color="accent"] .mat-icon {
+  color: #9c27b0 !important;
+}
+
+/* Hover elegante para cards de usuarios */
+.mat-mdc-list-item.user-item:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12) !important;
+  background-color: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+}
