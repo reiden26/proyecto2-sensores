@@ -1,10 +1,11 @@
 import { Type, ApplicationRef, StaticProvider } from '@angular/core';
+import { BootstrapContext } from '@angular/platform-browser';
 import { IncomingMessage, ServerResponse } from 'node:http';
 import { Http2ServerRequest, Http2ServerResponse } from 'node:http2';
 
 interface CommonEngineOptions {
     /** A method that when invoked returns a promise that returns an `ApplicationRef` instance once resolved or an NgModule. */
-    bootstrap?: Type<{}> | (() => Promise<ApplicationRef>);
+    bootstrap?: Type<{}> | ((context: BootstrapContext) => Promise<ApplicationRef>);
     /** A set of platform level providers for all requests. */
     providers?: StaticProvider[];
     /** Enable request performance profiling data collection and printing the results in the server console. */
@@ -12,7 +13,7 @@ interface CommonEngineOptions {
 }
 interface CommonEngineRenderOptions {
     /** A method that when invoked returns a promise that returns an `ApplicationRef` instance once resolved or an NgModule. */
-    bootstrap?: Type<{}> | (() => Promise<ApplicationRef>);
+    bootstrap?: Type<{}> | ((context: BootstrapContext) => Promise<ApplicationRef>);
     /** A set of platform level providers for the current request. */
     providers?: StaticProvider[];
     url?: string;

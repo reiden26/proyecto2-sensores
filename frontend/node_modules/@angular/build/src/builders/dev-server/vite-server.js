@@ -313,6 +313,7 @@ async function* serveWithVite(serverOptions, builderName, builderAction, context
             // Setup server and start listening
             const serverConfiguration = await setupServer(serverOptions, generatedFiles, assetFiles, browserOptions.preserveSymlinks, externalMetadata, ssrMode, prebundleTransformer, target, (0, internal_1.isZonelessApp)(polyfills), componentStyles, templateUpdates, browserOptions.loader, {
                 ...browserOptions.define,
+                'ngJitMode': browserOptions.aot ? 'false' : 'true',
                 'ngHmrMode': browserOptions.templateUpdates ? 'true' : 'false',
             }, extensions?.middleware, transformers?.indexHtml, thirdPartySourcemaps);
             server = await createServer(serverConfiguration);
