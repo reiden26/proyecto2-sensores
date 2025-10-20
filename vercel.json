@@ -1,11 +1,10 @@
 {
-  "version": 2,
   "builds": [
     {
       "src": "frontend/package.json",
-      "use": "@vercel/static-build",
+      "use": "@vercel/node",
       "config": {
-        "distDir": "dist/frontend/browser"
+        "zeroConfig": true
       }
     }
   ],
@@ -18,5 +17,7 @@
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ]
+  ],
+  "buildCommand": "cd frontend && npm install --legacy-peer-deps && npx ng build --output-path=dist/frontend/browser",
+  "outputDirectory": "frontend/dist/frontend/browser"
 }
