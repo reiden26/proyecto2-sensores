@@ -415,7 +415,7 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
       }
 
       // Obtener datos del usuario usando el endpoint correcto
-      this.http.get(`http://localhost:8000/usuarios/${this.userId}`, {
+      this.http.get(`${environment.apiBaseUrl}/usuarios/${this.userId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -597,7 +597,7 @@ export class UserSettingsComponent implements OnInit, OnDestroy {
 
 
     // Llamar a la API para actualizar
-    this.http.put(`http://localhost:8000/usuarios/${this.userId}`, updateData, {
+    this.http.put(`${environment.apiBaseUrl}/usuarios/${this.userId}`, updateData, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'

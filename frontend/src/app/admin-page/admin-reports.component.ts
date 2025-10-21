@@ -397,7 +397,7 @@ export class AdminReportsComponent implements OnInit, OnDestroy, AfterViewInit {
     const headers = { 'Authorization': `Bearer ${token}` };
     
     // Cargar datos del dashboard
-    this.http.get<any>('http://localhost:8000/reportes/dashboard', { headers }).subscribe({
+    this.http.get<any>(`${environment.apiBaseUrl}/reportes/dashboard`, { headers }).subscribe({
       next: (data) => {
         this.dashboardData = data;
         this.totalSensors = data.total_sensores;
@@ -425,7 +425,7 @@ export class AdminReportsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.cargarAlertasPersonalizadasPorRango(headers);
     
     // Cargar datos de usuarios
-    this.http.get<any>('http://localhost:8000/reportes/usuarios', { headers }).subscribe({
+    this.http.get<any>(`${environment.apiBaseUrl}/reportes/usuarios`, { headers }).subscribe({
       next: (data) => {
         // Normalizar estructura de usuarios para asegurar campos usados en el template
         if (data?.actividad_usuarios && Array.isArray(data.actividad_usuarios)) {
@@ -456,7 +456,7 @@ export class AdminReportsComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     
     // Cargar estado de sensores
-    this.http.get<any>('http://localhost:8000/reportes/sensores', { headers }).subscribe({
+    this.http.get<any>(`${environment.apiBaseUrl}/reportes/sensores`, { headers }).subscribe({
       next: (data) => {
         this.sensoresData = data.sensores;
         // Actualizar el array de sensores para compatibilidad
@@ -536,7 +536,7 @@ export class AdminReportsComponent implements OnInit, OnDestroy, AfterViewInit {
       const t = localStorage.getItem('token');
       if (!t) return;
       const hdrs = { 'Authorization': `Bearer ${t}` };
-      this.http.get<any>('http://localhost:8000/reportes/dashboard', { headers: hdrs }).subscribe({
+      this.http.get<any>(`${environment.apiBaseUrl}/reportes/dashboard`, { headers: hdrs }).subscribe({
         next: (data) => {
           this.totalSensors = data.total_sensores;
           this.activeSensors = data.sensores_activos;
@@ -1036,7 +1036,7 @@ export class AdminReportsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // Cargar series reales desde backend admin y agrupar por hora (últimas 24h)
   private cargarSeriesReales(headers: any): void {
-    this.http.get<any>('http://localhost:8000/lecturas/admin?limit=1000', { headers }).subscribe({
+    this.http.get<any>(`${environment.apiBaseUrl}/lecturas/admin?limit=1000`, { headers }).subscribe({
       next: (data) => {
         // Guardar lecturas crudas para recalcular por rango
         this.rawLecturas = {
