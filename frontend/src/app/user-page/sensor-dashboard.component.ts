@@ -99,10 +99,8 @@ export class SensorDashboardComponent implements OnInit, AfterViewInit, OnDestro
     if (this.isBrowser) {
       // Actualizar datos cada 10 segundos
       this.refreshInterval = setInterval(() => {
-        console.log('🔄 Actualización automática del dashboard...');
         this.loadSensorData();
       }, 10000);
-      console.log('✅ Intervalo de actualización automática configurado (cada 10 segundos)');
     }
   }
 
@@ -136,26 +134,20 @@ export class SensorDashboardComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   private initializeCharts() {
-    console.log('Inicializando gráficos...');
-    console.log('Chart.js disponible:', typeof Chart !== 'undefined');
-    console.log('Sensores:', this.sensors);
     
     // Verificar que Chart.js esté disponible
     if (typeof Chart === 'undefined') {
-      console.error('Chart.js no está disponible');
       return;
     }
 
     // Verificar si ya hay gráficos inicializados
     if (Object.keys(this.charts).length > 0) {
-      console.log('Gráficos ya inicializados, saltando...');
       return;
     }
 
     // Destruir gráficos existentes primero
     Object.values(this.charts).forEach((chart: any) => {
       if (chart) {
-        console.log('Destruyendo gráfico existente');
         chart.destroy();
       }
     });
@@ -163,10 +155,8 @@ export class SensorDashboardComponent implements OnInit, AfterViewInit, OnDestro
 
     this.sensors.forEach(sensor => {
       const canvasId = 'chart-' + sensor.id;
-      console.log(`Buscando canvas con ID: ${canvasId}`);
       
       const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
-      console.log(`Canvas encontrado para sensor ${sensor.id}:`, canvas);
       
       if (canvas) {
         const ctx = canvas.getContext('2d');
@@ -221,18 +211,13 @@ export class SensorDashboardComponent implements OnInit, AfterViewInit, OnDestro
               }
             });
             this.charts[sensor.id] = chart;
-            console.log(`✅ Gráfico creado exitosamente para sensor ${sensor.id}`);
           } catch (error) {
-            console.error(`❌ Error creando gráfico para sensor ${sensor.id}:`, error);
           }
         } else {
-          console.error(`❌ No se pudo obtener contexto 2D para sensor ${sensor.id}`);
         }
       } else {
-        console.error(`❌ Canvas no encontrado para sensor ${sensor.id}`);
         // Listar todos los elementos con ID que contengan 'chart'
         const allElements = document.querySelectorAll('[id*="chart"]');
-        console.log('Elementos con ID que contienen "chart":', allElements);
       }
     });
   }
@@ -241,7 +226,6 @@ export class SensorDashboardComponent implements OnInit, AfterViewInit, OnDestro
     this.isLoading = true;
     
     try {
-      console.log('📊 Cargando datos del dashboard...');
       
       // Cargar estado de sensores activos
       await this.loadActiveSensors();
@@ -249,9 +233,7 @@ export class SensorDashboardComponent implements OnInit, AfterViewInit, OnDestro
       // Cargar datos de lecturas para todos los sensores (para mostrar datos históricos)
       await this.loadAllSensorReadings();
       
-      console.log('✅ Datos del dashboard cargados exitosamente');
     } catch (error) {
-      console.error('❌ Error al cargar datos de sensores:', error);
       this.snackBar.open('Error al cargar datos de sensores', 'Cerrar', { duration: 3000 });
     } finally {
       this.isLoading = false;
@@ -261,12 +243,10 @@ export class SensorDashboardComponent implements OnInit, AfterViewInit, OnDestro
   private async loadActiveSensors() {
     const token = localStorage.getItem('token');
     if (!token) {
-      console.log('No hay token de autenticación');
       return;
     }
 
     try {
-      console.log('Cargando estado de sensores activos...');
       const response = await fetch(`${this.apiUrl}/sensores/activos`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -274,29 +254,22 @@ export class SensorDashboardComponent implements OnInit, AfterViewInit, OnDestro
         }
       });
 
-      console.log('Respuesta del endpoint sensores/activos:', response.status);
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Estado de sensores recibido:', data);
         
         this.sensors.forEach(sensor => {
           if (sensor.id === 'mq135') {
             sensor.active = data.mq135_activo || false;
-            console.log(`MQ-135 activo: ${sensor.active}`);
           } else if (sensor.id === 'mq4') {
             sensor.active = data.mq4_activo || false;
-            console.log(`MQ-4 activo: ${sensor.active}`);
           } else if (sensor.id === 'mq7') {
             sensor.active = data.mq7_activo || false;
-            console.log(`MQ-7 activo: ${sensor.active}`);
           }
         });
       } else {
-        console.error('Error en respuesta:', response.status, response.statusText);
       }
     } catch (error) {
-      console.error('Error al cargar estado de sensores:', error);
     }
   }
 
@@ -306,7 +279,6 @@ export class SensorDashboardComponent implements OnInit, AfterViewInit, OnDestro
 
     try {
       const limit = this.getLimitForTimeFilter();
-      console.log(`Cargando datos de lecturas con límite: ${limit}`);
       
       const response = await fetch(`${this.apiUrl}/lecturas/me?limit=${limit}`, {
         headers: {
@@ -315,31 +287,24 @@ export class SensorDashboardComponent implements OnInit, AfterViewInit, OnDestro
         }
       });
 
-      console.log('Respuesta del endpoint lecturas/me:', response.status);
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Datos recibidos del backend:', data);
         
         // Procesar datos para cada sensor
         this.sensors.forEach(sensor => {
           const sensorData = this.filterDataBySensor(data, sensor.id);
-          console.log(`Datos del sensor ${sensor.id}:`, sensorData);
           
           if (sensorData.length > 0) {
             const chartData = this.processDataForChart(sensorData, sensor.id);
             this.updateChart(sensor.id, chartData);
             this.updateSensorInfo(sensor.id, chartData);
-            console.log(`✅ Gráfica actualizada para ${sensor.id} con ${sensorData.length} datos`);
           } else {
-            console.log(`⚠️ No hay datos para el sensor ${sensor.id}`);
           }
         });
       } else {
-        console.error('Error en respuesta del endpoint lecturas/me:', response.status, response.statusText);
       }
     } catch (error) {
-      console.error('Error al cargar lecturas de sensores:', error);
     }
   }
 
@@ -438,10 +403,8 @@ export class SensorDashboardComponent implements OnInit, AfterViewInit, OnDestro
         chart.data.labels = data.labels;
         chart.data.datasets[0].data = data.values;
         chart.update('none');
-        console.log(`📈 Gráfica actualizada para ${sensorId} con ${data.values.length} puntos`);
       }
     } else {
-      console.warn(`⚠️ No se encontró gráfica para el sensor ${sensorId}`);
     }
   }
 
@@ -455,7 +418,6 @@ export class SensorDashboardComponent implements OnInit, AfterViewInit, OnDestro
       if (sensor.currentValue !== newValue) {
         sensor.currentValue = newValue;
         sensor.lastUpdate = newTime;
-        console.log(`🔄 Sensor ${sensorId} actualizado: ${newValue} ppm a las ${newTime}`);
       }
     }
   }

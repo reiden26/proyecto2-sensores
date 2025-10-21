@@ -145,74 +145,47 @@ export class UserDashboardComponent implements OnInit {
   constructor(private usuarioService: UsuarioService) {}
 
   ngOnInit() {
-    console.log('🚀 UserDashboardComponent initialized');
-    
     // Obtener el ID del usuario actual
     const currentUser = this.usuarioService.getCurrentUser();
-    console.log('Current user:', currentUser); // Debug
     
     if (currentUser && (currentUser.user_id || currentUser.id)) {
       this.userId = currentUser.user_id || currentUser.id;
-      console.log('✅ User ID set:', this.userId); // Debug
       this.loadDashboardStats();
     } else {
-      console.log('⏳ User not available yet, subscribing to user changes...');
       // Suscribirse a cambios en el usuario
       this.usuarioService.currentUser$.subscribe(user => {
         if (user && (user.user_id || user.id)) {
           this.userId = user.user_id || user.id;
-          console.log('✅ User ID set from subscription:', this.userId);
           this.loadDashboardStats();
         }
       });
     }
     
     // Cargar estadísticas inmediatamente (sin esperar userId)
-    console.log('🔄 Loading dashboard stats immediately...');
     this.loadDashboardStats();
     
     // Actualizar datos cada 30 segundos
     setInterval(() => {
-      console.log('🔄 Auto-refreshing dashboard stats...');
       this.loadDashboardStats();
     }, 30000);
   }
 
   private async loadDashboardStats() {
-    console.log('🔄 Loading dashboard stats...');
     try {
-      console.log('1. Loading active sensors count...');
       await this.loadActiveSensorsCount();
-      
-      console.log('2. Loading today data count...');
       await this.loadTodayDataCount();
-      
-      console.log('3. Loading last update time...');
       await this.loadLastUpdateTime();
-      
-      console.log('4. Updating system status...');
       this.updateSystemStatus();
-      
-      console.log('✅ Dashboard stats loaded:', {
-        activeSensors: this.activeSensors,
-        dataPoints: this.dataPoints,
-        lastUpdate: this.lastUpdate,
-        systemStatus: this.systemStatus
-      });
     } catch (error) {
-      console.error('❌ Error al cargar estadísticas del dashboard:', error);
+      // Error silencioso
     }
   }
 
   private async loadActiveSensorsCount() {
     const token = localStorage.getItem('token');
-    if (!token) {
-      console.log('❌ No token found for active sensors');
-      return;
-    }
+    if (!token) return;
 
     try {
-      console.log('Fetching active sensors from:', `${this.apiUrl}/sensores/activos`);
       const response = await fetch(`${this.apiUrl}/sensores/activos`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -220,31 +193,22 @@ export class UserDashboardComponent implements OnInit {
         }
       });
 
-      console.log('Active sensors response status:', response.status);
       if (response.ok) {
         const data = await response.json();
-        console.log('Active sensors data:', data);
         this.activeSensors = (data.mq135_activo ? 1 : 0) + 
                            (data.mq4_activo ? 1 : 0) + 
                            (data.mq7_activo ? 1 : 0);
-        console.log(`✅ Sensores activos: ${this.activeSensors}`);
-      } else {
-        console.error('❌ Error response from active sensors:', response.status);
       }
     } catch (error) {
-      console.error('❌ Error al cargar sensores activos:', error);
+      // Error silencioso
     }
   }
 
   private async loadTodayDataCount() {
     const token = localStorage.getItem('token');
-    if (!token) {
-      console.log('❌ No token found for today data');
-      return;
-    }
+    if (!token) return;
 
     try {
-      console.log('Fetching today data from:', `${this.apiUrl}/lecturas/me?limit=1000`);
       const response = await fetch(`${this.apiUrl}/lecturas/me?limit=1000`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -252,12 +216,9 @@ export class UserDashboardComponent implements OnInit {
         }
       });
 
-      console.log('Today data response status:', response.status);
       if (response.ok) {
         const data = await response.json();
-        console.log('Today data response:', data);
         const today = new Date().toDateString();
-        console.log('Today date string:', today);
         
         let todayCount = 0;
         ['mq135', 'mq4', 'mq7'].forEach(sensorId => {
@@ -265,18 +226,14 @@ export class UserDashboardComponent implements OnInit {
             const sensorTodayCount = data[sensorId].filter((reading: any) => 
               new Date(reading.creado_en).toDateString() === today
             ).length;
-            console.log(`${sensorId} today count:`, sensorTodayCount);
             todayCount += sensorTodayCount;
           }
         });
         
         this.dataPoints = todayCount;
-        console.log(`✅ Datos de hoy: ${this.dataPoints}`);
-      } else {
-        console.error('❌ Error response from today data:', response.status);
       }
     } catch (error) {
-      console.error('❌ Error al cargar datos de hoy:', error);
+      // Error silencioso
     }
   }
 
@@ -322,10 +279,9 @@ export class UserDashboardComponent implements OnInit {
           this.lastUpdate = 'N/A';
         }
         
-        console.log(`Última actualización: ${this.lastUpdate}`);
       }
     } catch (error) {
-      console.error('Error al cargar última actualización:', error);
+      // Error silencioso
     }
   }
 

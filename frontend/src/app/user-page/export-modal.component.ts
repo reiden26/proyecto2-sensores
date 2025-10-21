@@ -79,26 +79,27 @@ import { MatCardModule } from '@angular/material/card';
   styles: [`
     .export-modal {
       padding: 0;
+      overflow: hidden;
     }
 
     h2 {
       color: #1976d2;
-      margin-bottom: 16px;
-      font-size: 1.5rem;
+      margin-bottom: 12px;
+      font-size: 1.4rem;
       font-weight: 500;
     }
 
     p {
       color: #666;
-      margin-bottom: 24px;
-      font-size: 1rem;
+      margin-bottom: 16px;
+      font-size: 0.95rem;
     }
 
     .export-options {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 16px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
 
     .export-option {
@@ -107,6 +108,7 @@ import { MatCardModule } from '@angular/material/card';
       border: 2px solid transparent;
       background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(10px);
+      min-height: 80px;
     }
 
     .export-option.disabled {
@@ -124,8 +126,9 @@ import { MatCardModule } from '@angular/material/card';
     .option-content {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
       padding: 8px;
+      min-height: 60px;
     }
 
     .option-content mat-icon {
@@ -133,24 +136,28 @@ import { MatCardModule } from '@angular/material/card';
       width: 32px;
       height: 32px;
       color: #1976d2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
 
     .option-text h3 {
-      margin: 0 0 4px 0;
+      margin: 0 0 2px 0;
       color: #333;
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 500;
     }
 
     .option-text p {
       margin: 0;
       color: #666;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
 
     mat-dialog-actions {
       justify-content: flex-end;
-      padding: 16px 0 0 0;
+      padding: 12px 0 0 0;
     }
 
     mat-dialog-actions button {

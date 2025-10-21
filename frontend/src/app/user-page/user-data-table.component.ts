@@ -75,20 +75,16 @@ export class UserDataTableComponent implements OnInit, AfterViewInit {
 
     // Configurar ordenamiento personalizado para campos numéricos
     this.dataSource.sortingDataAccessor = (item: DataItem, property: string) => {
-      console.log('Sorting accessor called for property:', property, 'value:', item[property as keyof DataItem]);
       
       switch (property) {
         case 'id':
           const idValue = +item.id;
-          console.log('ID sorting value:', idValue);
           return idValue;
         case 'valor':
           const valorValue = +item.valor;
-          console.log('Valor sorting value:', valorValue);
           return valorValue;
         case 'fecha':
           const fechaValue = new Date(item.fecha).getTime();
-          console.log('Fecha sorting value:', fechaValue);
           return fechaValue;
         case 'sensor':
           return item.sensor.toLowerCase();
@@ -129,13 +125,11 @@ export class UserDataTableComponent implements OnInit, AfterViewInit {
 
   // Aplicar filtro por sensor
   aplicarFiltroSensor() {
-    console.log('Aplicando filtro sensor:', this.filtroSensor);
     this.dataSource.filter = Math.random().toString();
   }
 
   // Aplicar filtro por estado
   aplicarFiltroEstado() {
-    console.log('Aplicando filtro estado:', this.filtroEstado);
     this.dataSource.filter = Math.random().toString();
   }
 
@@ -146,7 +140,6 @@ export class UserDataTableComponent implements OnInit, AfterViewInit {
     this.filtroEstado = '';
     this.isSearchActive = false;
     this.dataSource.filter = '';
-    console.log('Filtros limpiados, datos restaurados:', this.dataItems.length);
   }
 
   // Activar búsqueda cuando se hace focus
@@ -200,17 +193,11 @@ export class UserDataTableComponent implements OnInit, AfterViewInit {
         }
         }, 100);
         
-        console.log('Total de datos cargados:', this.dataItems.length);
-        console.log('Datos por sensor:', {
-          mq135: this.dataItems.filter(d => d.sensor === 'MQ-135').length,
-          mq4: this.dataItems.filter(d => d.sensor === 'MQ-4').length,
-          mq7: this.dataItems.filter(d => d.sensor === 'MQ-7').length
-        });
       } else {
         this.snackBar.open('Error al cargar datos', 'Cerrar', { duration: 3000 });
       }
     } catch (error) {
-      console.error('Error al cargar datos:', error);
+      // Error silencioso
       this.snackBar.open('Error de conexión', 'Cerrar', { duration: 3000 });
     } finally {
       this.isLoading = false;
@@ -275,15 +262,6 @@ export class UserDataTableComponent implements OnInit, AfterViewInit {
     // Ordenar por fecha (más reciente primero) - esto se manejará por el sort de la tabla
     // this.dataItems.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
     
-    console.log('Datos procesados:', this.dataItems.length, 'registros');
-    if (this.dataItems.length > 0) {
-      console.log('Primer registro:', this.dataItems[0]);
-      console.log('Tipos de datos:', {
-        id: typeof this.dataItems[0].id,
-        valor: typeof this.dataItems[0].valor,
-        fecha: typeof this.dataItems[0].fecha
-      });
-    }
   }
 
   // Mapear estado del backend al frontend

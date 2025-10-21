@@ -106,7 +106,6 @@ export class SensorComparisonChartComponent implements OnInit, OnDestroy, OnChan
   private getUserIdFromToken() {
     const token = localStorage.getItem('token');
     if (!token) {
-      console.error('❌ No token found in localStorage');
       return;
     }
 
@@ -114,23 +113,17 @@ export class SensorComparisonChartComponent implements OnInit, OnDestroy, OnChan
       // Decodificar el token JWT para obtener el userId
       const payload = JSON.parse(atob(token.split('.')[1]));
       this.userId = payload.user_id || payload.id || payload.sub;
-      console.log('✅ UserId extracted from token:', this.userId);
       
       if (this.userId) {
         this.loadData();
         this.startDataUpdates();
       } else {
-        console.error('❌ No userId found in token payload');
       }
     } catch (error) {
-      console.error('❌ Error decoding token:', error);
     }
   }
 
   ngOnInit() {
-    console.log('🚀 SensorComparisonChartComponent initialized');
-    console.log('User ID received:', this.userId);
-    console.log('Selected time filter:', this.selectedTimeFilter);
     
     // Obtener userId del token JWT como hace sensor-dashboard
     this.getUserIdFromToken();
@@ -161,7 +154,6 @@ export class SensorComparisonChartComponent implements OnInit, OnDestroy, OnChan
 
   private createAreaChart() {
     if (!this.areaChartCanvas || !this.hasData) {
-      console.log('❌ Canvas not available or no data');
       return;
     }
 
@@ -172,7 +164,6 @@ export class SensorComparisonChartComponent implements OnInit, OnDestroy, OnChan
 
     const ctx = this.areaChartCanvas.nativeElement.getContext('2d');
     if (!ctx) {
-      console.error('❌ Could not get canvas context');
       return;
     }
 
@@ -283,7 +274,6 @@ export class SensorComparisonChartComponent implements OnInit, OnDestroy, OnChan
       }
     });
 
-    console.log('✅ Area chart created successfully');
   }
 
   private prepareChartData() {
@@ -330,24 +320,17 @@ export class SensorComparisonChartComponent implements OnInit, OnDestroy, OnChan
 
   private loadData() {
     if (!this.userId) {
-      console.log('❌ No userId available');
       return;
     }
 
     this.loading = true;
-    console.log('🔄 Loading sensor data for user:', this.userId, 'with filter:', this.selectedTimeFilter);
 
     this.usuarioService.getSensorData(this.userId, this.selectedTimeFilter).subscribe({
       next: (data: SensorDataResponse) => {
-        console.log('✅ Data received:', data);
-        console.log('MQ135 data:', data.mq135?.length || 0, 'items');
-        console.log('MQ4 data:', data.mq4?.length || 0, 'items');
-        console.log('MQ7 data:', data.mq7?.length || 0, 'items');
         
         this.sensorData = data;
         this.hasData = data.mq135.length > 0 || data.mq4.length > 0 || data.mq7.length > 0;
         
-        console.log('Has data:', this.hasData);
         this.loading = false;
         
         // Crear el gráfico después de cargar los datos
@@ -358,7 +341,6 @@ export class SensorComparisonChartComponent implements OnInit, OnDestroy, OnChan
         }
       },
       error: (error) => {
-        console.error('❌ Error loading data:', error);
         this.loading = false;
       }
     });

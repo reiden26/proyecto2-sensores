@@ -206,6 +206,7 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
   abrirModalExportacion() {
     const dialogRef = this.dialog.open(ExportModalComponent, {
       width: '500px',
+      maxHeight: '90vh',
       data: { filters: this.filters }
     });
 
