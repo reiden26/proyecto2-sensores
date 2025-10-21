@@ -17,31 +17,16 @@ export class NavbarComponent {
   
   toggleMobileMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
-    // Prevenir scroll del body cuando el menú está abierto
-    if (this.isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
   }
   
   closeMobileMenu() {
     this.isMobileMenuOpen = false;
-    document.body.style.overflow = '';
   }
   
   // Cerrar menú móvil al cambiar el tamaño de la ventana
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     if (event.target.innerWidth > 768) {
-      this.closeMobileMenu();
-    }
-  }
-  
-  // Cerrar menú móvil al hacer scroll
-  @HostListener('window:scroll', ['$event'])
-  onScroll(event: any) {
-    if (this.isMobileMenuOpen) {
       this.closeMobileMenu();
     }
   }

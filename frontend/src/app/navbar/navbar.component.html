@@ -1,17 +1,14 @@
 <nav class="navbar">
   <div class="navbar-content">
-    <!-- Logo/Brand -->
-    <div class="navbar-brand">
-      <span class="brand-text">SensorMonitor</span>
-    </div>
-
     <!-- Desktop Navigation -->
     <ul class="nav-list desktop-nav">
       <li><a href="#" (click)="scrollToTop($event)">Inicio</a></li>
       <li><a href="#tecnologia" (click)="scrollToTechnology($event)">Tecnología</a></li>
       <li><a href="#carousel-section" (click)="scrollToCarousel($event)">Herramientas</a></li>
     </ul>
-
+    
+    <div class="spacer"></div>
+    
     <!-- Desktop Auth Button -->
     <div class="auth-buttons desktop-auth">
       <button class="elegant-btn login-btn" (click)="onLoginClick()">
@@ -29,9 +26,6 @@
       <span class="hamburger-line"></span>
     </button>
   </div>
-
-  <!-- Mobile Menu Overlay -->
-  <div class="mobile-menu-overlay" [class.active]="isMobileMenuOpen" (click)="closeMobileMenu()"></div>
 
   <!-- Mobile Menu -->
   <div class="mobile-menu" [class.active]="isMobileMenuOpen">
