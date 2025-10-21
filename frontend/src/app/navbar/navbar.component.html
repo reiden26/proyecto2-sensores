@@ -1,49 +1,18 @@
 <nav class="navbar">
   <div class="navbar-content">
-    <!-- Desktop Navigation -->
-    <ul class="nav-list desktop-nav">
+    <ul class="nav-list">
       <li><a href="#" (click)="scrollToTop($event)">Inicio</a></li>
       <li><a href="#tecnologia" (click)="scrollToTechnology($event)">Tecnología</a></li>
       <li><a href="#carousel-section" (click)="scrollToCarousel($event)">Herramientas</a></li>
     </ul>
-    
     <div class="spacer"></div>
-    
-    <!-- Desktop Auth Button -->
-    <div class="auth-buttons desktop-auth">
+    <div class="auth-buttons">
       <button class="elegant-btn login-btn" (click)="onLoginClick()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="btn-icon">
           <path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/>
         </svg>
         Ingresar
       </button>
-    </div>
-
-    <!-- Mobile Menu Button -->
-    <button class="mobile-menu-btn" (click)="toggleMobileMenu()" [class.active]="isMobileMenuOpen">
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-    </button>
-  </div>
-
-  <!-- Mobile Menu -->
-  <div class="mobile-menu" [class.active]="isMobileMenuOpen">
-    <div class="mobile-menu-content">
-      <ul class="mobile-nav-list">
-        <li><a href="#" (click)="scrollToTop($event); closeMobileMenu()">Inicio</a></li>
-        <li><a href="#tecnologia" (click)="scrollToTechnology($event); closeMobileMenu()">Tecnología</a></li>
-        <li><a href="#carousel-section" (click)="scrollToCarousel($event); closeMobileMenu()">Herramientas</a></li>
-      </ul>
-      
-      <div class="mobile-auth-section">
-        <button class="mobile-login-btn" (click)="onLoginClick(); closeMobileMenu()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="btn-icon">
-            <path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/>
-          </svg>
-          Ingresar
-        </button>
-      </div>
     </div>
   </div>
 </nav>

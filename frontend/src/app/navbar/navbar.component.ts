@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-navbar',
@@ -9,26 +9,8 @@ import { Component, Output, EventEmitter, HostListener } from '@angular/core';
 export class NavbarComponent {
   @Output() loginClick = new EventEmitter<void>();
   
-  isMobileMenuOpen = false;
-  
   onLoginClick() {
     this.loginClick.emit();
-  }
-  
-  toggleMobileMenu() {
-    this.isMobileMenuOpen = !this.isMobileMenuOpen;
-  }
-  
-  closeMobileMenu() {
-    this.isMobileMenuOpen = false;
-  }
-  
-  // Cerrar menú móvil al cambiar el tamaño de la ventana
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    if (event.target.innerWidth > 768) {
-      this.closeMobileMenu();
-    }
   }
   
   scrollToTop(event: Event) {
