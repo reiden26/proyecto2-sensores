@@ -313,7 +313,7 @@
   
   .mat-mdc-input-element::placeholder {
     color: rgba(0, 172, 193, 0.7) !important;
-    opacity: 1 !important;
+    opacity: 0 !important;
     transition: opacity 0.3s ease !important;
   }
   
@@ -364,7 +364,7 @@
 :host ::ng-deep .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-infix input::placeholder {
   color: rgba(255, 255, 255, 0.7) !important;
   font-weight: 400 !important;
-  opacity: 1 !important;
+  opacity: 0 !important;
   transition: opacity 0.3s ease !important;
 }
 
@@ -377,21 +377,21 @@
 :host ::ng-deep .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-infix input::-webkit-input-placeholder {
   color: rgba(255, 255, 255, 0.7) !important;
   font-weight: 400 !important;
-  opacity: 1 !important;
+  opacity: 0 !important;
   transition: opacity 0.3s ease !important;
 }
 
 :host ::ng-deep .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-infix input::-moz-placeholder {
   color: rgba(255, 255, 255, 0.7) !important;
   font-weight: 400 !important;
-  opacity: 1 !important;
+  opacity: 0 !important;
   transition: opacity 0.3s ease !important;
 }
 
 :host ::ng-deep .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-infix input:-ms-input-placeholder {
   color: rgba(255, 255, 255, 0.7) !important;
   font-weight: 400 !important;
-  opacity: 1 !important;
+  opacity: 0 !important;
   transition: opacity 0.3s ease !important;
 }
 
