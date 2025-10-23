@@ -5,7 +5,13 @@ import os
 from dotenv import load_dotenv
 
 # Cargar las variables desde el archivo .env
-load_dotenv()
+# Prioridad: .env.local (desarrollo) > .env (producción)
+if os.path.exists('.env.local'):
+    load_dotenv('.env.local')
+    print("🔧 Usando configuración local (.env.local)")
+else:
+    load_dotenv()
+    print("🌐 Usando configuración de producción (.env)")
 
 # Leer la URL de la base de datos (ahora desde Railway)
 SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
