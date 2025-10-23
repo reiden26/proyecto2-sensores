@@ -85,8 +85,26 @@
             <mat-option value="today">Hoy</mat-option>
             <mat-option value="week">Esta semana</mat-option>
             <mat-option value="month">Este mes</mat-option>
+            <mat-option value="custom">Rango personalizado</mat-option>
           </mat-select>
         </mat-form-field>
+
+        <!-- Selector de fechas personalizado -->
+        <div *ngIf="selectedDateRange === 'custom'" class="custom-date-range">
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Desde</mat-label>
+            <input matInput [matDatepicker]="pickerFrom" [(ngModel)]="customDateFrom" (dateChange)="onChangeCustomDateRange()">
+            <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+            <mat-datepicker #pickerFrom></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Hasta</mat-label>
+            <input matInput [matDatepicker]="pickerTo" [(ngModel)]="customDateTo" (dateChange)="onChangeCustomDateRange()">
+            <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+            <mat-datepicker #pickerTo></mat-datepicker>
+          </mat-form-field>
+        </div>
 
         <mat-form-field appearance="outline" class="filter-field">
           <mat-label>Severidad de alertas</mat-label>
@@ -650,7 +668,7 @@
                   <ng-container matColumnDef="sensor_codigo">
                     <th mat-header-cell *matHeaderCellDef>Sensor</th>
                     <td mat-cell *matCellDef="let row">
-                      <span class="badge badge-sensor">{{ row.sensor_codigo === 'mq135' ? 'MQ-135' : (row.sensor_codigo === 'mq7' ? 'MQ-7' : (row.sensor_codigo === 'mq4' ? 'MQ-4' : row.sensor_codigo)) }}</span>
+                      <span class="badge badge-sensor">{{ row.sensor_codigo === 'mq135' ? 'MQ-135' : (row.sensor_codigo === 'mq7' ? 'MQ-7' : (row.sensor_codigo === 'mq4' ? 'MQ-4' : (row.sensor_codigo === 'general' ? 'General' : row.sensor_codigo))) }}</span>
                     </td>
                   </ng-container>
 

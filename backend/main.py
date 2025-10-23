@@ -2365,6 +2365,7 @@ def get_dashboard_stats(current_user: models.Usuario = Depends(auth.require_admi
     }
 
 
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)

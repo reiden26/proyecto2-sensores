@@ -10,6 +10,23 @@
   padding-bottom: 4rem;
 }
 
+/* Selector de fechas personalizado */
+.custom-date-range {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 0.5rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.custom-date-range .filter-field {
+  flex: 1;
+  min-width: 200px;
+}
+
 /* Header Card */
 .header-card {
   background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 70%, #2563eb 100%) !important;
@@ -1225,9 +1242,37 @@
   border-radius: 8px;
 }
 
+/* Material 3 - Tabla de notificaciones */
 .notif-table {
   width: 100%;
   min-width: 900px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+/* Headers de tabla con Material 3 */
+.notif-table th {
+  background: #f8fafc !important;
+  color: #374151 !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  border-bottom: 2px solid #e5e7eb !important;
+  padding: 16px 12px !important;
+}
+
+/* Celdas de tabla */
+.notif-table td {
+  padding: 12px !important;
+  border-bottom: 1px solid #f3f4f6 !important;
+  vertical-align: middle !important;
+}
+
+/* Última fila sin borde */
+.notif-table tbody tr:last-child td {
+  border-bottom: none !important;
 }
 
 /* Acciones: colores de iconos */
@@ -1237,17 +1282,26 @@
 .notif-table .action-btn.delete mat-icon { color: #e53935; }
 .notif-table .action-btn.delete:hover mat-icon { color: #b71c1c; }
 
-/* Colores de fila por tipo */
+/* Material 3 - Filas de tabla sin fondo de color */
 .notif-table .row-info {
-  background: #e8f0fe; /* azul claro */
+  background: transparent;
+  border-left: 4px solid #1976d2;
 }
 
 .notif-table .row-warning {
-  background: #fff8db; /* amarillo claro */
+  background: transparent;
+  border-left: 4px solid #f57c00;
 }
 
 .notif-table .row-danger {
-  background: #ffe5e5; /* rojo claro */
+  background: transparent;
+  border-left: 4px solid #d32f2f;
+}
+
+/* Hover effect para filas */
+.notif-table tbody tr:hover {
+  background: rgba(0, 0, 0, 0.04) !important;
+  transition: background-color 0.2s ease;
 }
 
 .cell-input {

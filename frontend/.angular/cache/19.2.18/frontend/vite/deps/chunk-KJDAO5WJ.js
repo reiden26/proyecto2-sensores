@@ -10,14 +10,6 @@ import {
   coerceCssPixelValue
 } from "./chunk-JXBCBRYI.js";
 import {
-  ScrollDispatcher,
-  ScrollingModule,
-  ViewportRuler
-} from "./chunk-PWRW6JF6.js";
-import {
-  supportsScrollBehavior
-} from "./chunk-2O4WY5GE.js";
-import {
   ESCAPE,
   _IdGenerator,
   _getEventTarget,
@@ -28,6 +20,14 @@ import {
   _CdkPrivateStyleLoader,
   _bindEventWithOptions
 } from "./chunk-BFW74HM2.js";
+import {
+  ScrollDispatcher,
+  ScrollingModule,
+  ViewportRuler
+} from "./chunk-PWRW6JF6.js";
+import {
+  supportsScrollBehavior
+} from "./chunk-2O4WY5GE.js";
 import {
   BidiModule,
   Directionality
@@ -2897,4 +2897,4 @@ export {
   CdkConnectedOverlay,
   OverlayModule
 };
-//# sourceMappingURL=chunk-TNBYPWMU.js.map
+//# sourceMappingURL=chunk-KJDAO5WJ.js.map

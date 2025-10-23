@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -61,6 +61,11 @@ export class AdminDataComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedDateTo = '';
   showFilters = false;
   
+  // Configuración de paginación con cache
+  pageSize = 10;
+  pageSizeOptions = [10, 25, 50, 100];
+  private previousPageSize = 10;
+  
   statistics: Statistics = {
     total: 0,
     buenos: 0,
@@ -97,6 +102,10 @@ export class AdminDataComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   
   ngOnInit(): void {
+    // Cargar configuración de paginación desde cache
+    this.loadPageSizeFromCache();
+    this.previousPageSize = this.pageSize; // Inicializar el valor anterior
+    
     // Suscribirse a los datos cacheados
     this.adminDataService.data$
       .pipe(takeUntil(this.destroy$))
@@ -329,5 +338,56 @@ export class AdminDataComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   refreshData(): void {
     this.loadData(true);
+  }
+  
+  /**
+   * Carga la configuración de pageSize desde el cache de sesión
+   */
+  private loadPageSizeFromCache(): void {
+    if (this.isBrowser) {
+      try {
+        const cachedPageSize = sessionStorage.getItem('admin-data-pageSize');
+        if (cachedPageSize) {
+          const parsedSize = parseInt(cachedPageSize, 10);
+          if (this.pageSizeOptions.includes(parsedSize)) {
+            this.pageSize = parsedSize;
+          }
+        }
+      } catch (error) {
+        console.warn('Error cargando pageSize desde cache:', error);
+      }
+    }
+  }
+  
+  /**
+   * Guarda la configuración de pageSize en el cache de sesión
+   */
+  private savePageSizeToCache(): void {
+    if (this.isBrowser) {
+      try {
+        sessionStorage.setItem('admin-data-pageSize', this.pageSize.toString());
+      } catch (error) {
+        console.warn('Error guardando pageSize en cache:', error);
+      }
+    }
+  }
+  
+  /**
+   * Maneja el cambio de página o pageSize del paginador
+   */
+  onPageChange(event: PageEvent): void {
+    // Solo guardar en cache si realmente cambió el pageSize
+    if (event.pageSize !== this.previousPageSize) {
+      this.pageSize = event.pageSize;
+      this.previousPageSize = event.pageSize;
+      this.savePageSizeToCache();
+      console.log('💾 PageSize cambiado y guardado en cache:', event.pageSize);
+    }
+    
+    // Forzar actualización del paginador
+    if (this.paginator) {
+      this.paginator.pageSize = event.pageSize;
+      this.paginator.pageIndex = 0; // Volver a la primera página
+    }
   }
 }

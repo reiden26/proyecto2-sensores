@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
@@ -199,6 +199,11 @@ export class AdminReportsComponent implements OnInit, OnDestroy, AfterViewInit {
   selectedAlertSeverity = '';
   private filtroDesde?: Date;
   private filtroHasta?: Date;
+  
+  // Nuevo: Selector de fechas personalizado
+  customDateRange = false;
+  customDateFrom?: Date;
+  customDateTo?: Date;
 
   // Datos simulados para gráficos - Sensores específicos
   pm25Data = [
@@ -627,10 +632,20 @@ export class AdminReportsComponent implements OnInit, OnDestroy, AfterViewInit {
   private cargarAlertasPersonalizadasPorRango(headers: any): void {
     this.isLoadingAlerts = true;
     const base = `${environment.apiBaseUrl}/reportes/alertas-personalizadas`;
-    let rango = 'today';
-    if (this.selectedDateRange === 'week') rango = 'week';
-    else if (this.selectedDateRange === 'month') rango = 'month';
-    const url = `${base}?rango=${rango}`;
+    
+    let url = base;
+    if (this.customDateRange && this.customDateFrom && this.customDateTo) {
+      // Calcular días entre fechas
+      const diffTime = Math.abs(this.customDateTo.getTime() - this.customDateFrom.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      url = `${base}?rango=dias&dias=${diffDays}`;
+    } else {
+      let rango = 'today';
+      if (this.selectedDateRange === 'week') rango = 'week';
+      else if (this.selectedDateRange === 'month') rango = 'month';
+      url = `${base}?rango=${rango}`;
+    }
+    
     this.http.get<any>(url, { headers }).subscribe({
       next: (data) => {
         this.alertasPersonalizadasData = data?.alertas || [];
@@ -677,6 +692,9 @@ export class AdminReportsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onChangeDateRange(): void {
+    // Desactivar rango personalizado si se selecciona un rango predefinido
+    this.customDateRange = false;
+    
     // Mapear opciones de UI a rango
     const hoy = new Date();
     const inicio = new Date(hoy);
@@ -726,15 +744,86 @@ export class AdminReportsComponent implements OnInit, OnDestroy, AfterViewInit {
     // Aplicar a alertas
     this.aplicarFiltrosAlertas();
   }
+  
+  onChangeCustomDateRange(): void {
+    if (this.customDateFrom && this.customDateTo) {
+      this.customDateRange = true;
+      this.filtroDesde = new Date(this.customDateFrom);
+      this.filtroHasta = new Date(this.customDateTo);
+      
+      // Recargar datos con el rango personalizado
+      this.recargarDatosPorRango();
+    }
+  }
+  
+  private recargarDatosPorRango(): void {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const headers = { 'Authorization': `Bearer ${token}` };
+      this.cargarAlertasPorRango(headers);
+      this.cargarAlertasPersonalizadasPorRango(headers);
+      
+      // Recargar estado de sensores
+      this.http.get<any>(`${environment.apiBaseUrl}/reportes/sensores`, { headers }).subscribe({
+        next: (data) => {
+          this.sensoresData = data.sensores;
+          // Actualizar el array de sensores para compatibilidad
+          this.sensors = data.sensores.map((sensor: any) => ({
+            id: sensor.id,
+            name: sensor.nombre,
+            type: sensor.descripcion,
+            status: sensor.estado,
+            lastValue: sensor.valor_actual,
+            unit: sensor.unidad,
+            lastUpdate: sensor.ultima_actualizacion ? new Date(sensor.ultima_actualizacion) : new Date()
+          }));
+          this.sensoresFiltrados = [...this.sensors];
+        },
+        error: () => {}
+      });
+      
+      // Actualizar analítica temporal
+      let scope = 'today';
+      if (this.customDateRange) {
+        // Para rangos personalizados, usar 'today' como fallback
+        scope = 'today';
+      } else {
+        scope = this.selectedDateRange === 'week' ? 'week' : (this.selectedDateRange === 'month' ? 'month' : 'today');
+      }
+      
+      this.http.get<any>(`${environment.apiBaseUrl}/reportes/analitica?scope=${scope}`, { headers }).subscribe({ 
+        next: (d)=> { 
+          this.dashboardData = { ...(this.dashboardData||{}), temporalTotals: d?.totales, temporalLabel: d?.label }; 
+        }, 
+        error: ()=>{} 
+      });
+    }
+
+    // Recalcular series de gráficos con el nuevo rango
+    this.recalcularSeriesPorRango();
+
+    // Aplicar a alertas
+    this.aplicarFiltrosAlertas();
+  }
 
   private cargarAlertasPorRango(headers: any): void {
     this.isLoadingAlerts = true;
     // Usar base del environment para coincidir con el backend actual
     const base = `${environment.apiBaseUrl}/reportes/alertas`;
-    let rango = 'today';
-    if (this.selectedDateRange === 'week') rango = 'week';
-    else if (this.selectedDateRange === 'month') rango = 'month';
-    const url = `${base}?rango=${rango}`;
+    
+    let url = base;
+    if (this.customDateRange && this.customDateFrom && this.customDateTo) {
+      // Calcular días entre fechas
+      const diffTime = Math.abs(this.customDateTo.getTime() - this.customDateFrom.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      url = `${base}?rango=dias&dias=${diffDays}`;
+    } else {
+      let rango = 'today';
+      if (this.selectedDateRange === 'week') rango = 'week';
+      else if (this.selectedDateRange === 'month') rango = 'month';
+      url = `${base}?rango=${rango}`;
+    }
+    
     this.http.get<any>(url, { headers }).subscribe({
       next: (data) => {
         this.alertasData = data?.alertas || [];
@@ -819,25 +908,55 @@ export class AdminReportsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   crearNotificacion(row?: Partial<AdminNotificacionRow>): void {
-    const body: any = {
-      usuario_id: row?.usuario_id ?? null,
-      sensor_codigo: row?.sensor_codigo ?? 'mq135',
-      valor: row?.valor ?? 0,
-      estado: row?.estado ?? 'bueno',
-      titulo: row?.titulo ?? '',
-      mensaje: row?.mensaje ?? '',
-      tipo: row?.tipo ?? 'info',
-      leida: row?.leida ?? false
-    };
-    const token = localStorage.getItem('token');
-    if (!token) return;
-    const headers = { 'Authorization': `Bearer ${token}` };
-    this.http.post<AdminNotificacionRow>(`${environment.apiBaseUrl}/notificaciones`, body, { headers }).subscribe({
-      next: (created) => {
-        const data = [created, ...this.notificacionesDataSource.data];
-        data.sort((a, b) => Number(a.id) - Number(b.id));
-        this.notificacionesDataSource.data = data;
+    const dialogRef = this.dialog.open(NotifCreateDialogComponent, {
+      width: '600px',
+      maxWidth: '95vw',
+      data: { 
+        ...row, 
+        usuarios: this.usuariosSoloUsuario 
       }
+    });
+    
+    dialogRef.afterClosed().subscribe((result: AdminNotificacionRow | null) => {
+      if (!result) return;
+      
+      const body: any = {
+        usuario_id: result.usuario_id,
+        titulo: result.titulo,
+        mensaje: result.mensaje,
+        tipo: result.tipo || 'info',
+        leida: result.leida || false
+      };
+      
+      // Solo incluir campos de sensor si se seleccionó uno específico
+      if (result.sensor_codigo && result.sensor_codigo !== '') {
+        body.sensor_codigo = result.sensor_codigo;
+        body.valor = result.valor || 0;
+        body.estado = result.estado || 'bueno';
+      } else {
+        // Si no se seleccionó sensor, usar un valor especial para notificaciones generales
+        body.sensor_codigo = 'general';
+        body.valor = 0;
+        body.estado = 'bueno';
+      }
+      
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      const headers = { 'Authorization': `Bearer ${token}` };
+      
+      this.http.post<AdminNotificacionRow>(`${environment.apiBaseUrl}/notificaciones`, body, { headers }).subscribe({
+        next: (created) => {
+          const data = [created, ...this.notificacionesDataSource.data];
+          data.sort((a, b) => Number(a.id) - Number(b.id));
+          this.notificacionesDataSource.data = data;
+          this.aplicarFiltroNotificaciones();
+          this.notificationService.showUserSuccess('Notificación enviada correctamente');
+        },
+        error: (err) => {
+          console.error('Error creando notificación:', err);
+          this.notificationService.showUserError('crear notificación', 'No se pudo enviar la notificación');
+        }
+      });
     });
   }
 
@@ -1052,6 +1171,11 @@ export class AdminReportsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private getTituloRango(): string {
+    if (this.customDateRange && this.customDateFrom && this.customDateTo) {
+      const fromStr = this.customDateFrom.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
+      const toStr = this.customDateTo.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
+      return `${fromStr} - ${toStr}`;
+    }
     if (this.selectedDateRange === 'week') return 'Esta semana';
     if (this.selectedDateRange === 'month') return 'Este mes';
     return 'Últimas 24h';
@@ -1060,38 +1184,89 @@ export class AdminReportsComponent implements OnInit, OnDestroy, AfterViewInit {
   private recalcularSeriesPorRango(): void {
     const ahora = new Date();
     let desde: Date;
-    if (this.selectedDateRange === 'week') desde = new Date(ahora.getTime() - 7 * 24 * 60 * 60 * 1000);
-    else if (this.selectedDateRange === 'month') desde = new Date(ahora.getTime() - 30 * 24 * 60 * 60 * 1000);
-    else desde = new Date(ahora.getTime() - 24 * 60 * 60 * 1000);
-
-    const construirSerie = (items: any[], stepHours: number) => {
-      const filtrados = items.filter((i: any) => new Date(i.fecha_lectura) >= desde);
+    let hasta: Date;
+    
+    if (this.customDateRange && this.customDateFrom && this.customDateTo) {
+      // Usar rango personalizado
+      desde = new Date(this.customDateFrom);
+      hasta = new Date(this.customDateTo);
+      
+      // Calcular días entre fechas para determinar el step
+      const diffTime = Math.abs(hasta.getTime() - desde.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      // Ajustar step según el rango personalizado
+      let step = 4; // horas por punto por defecto
+      if (diffDays <= 1) step = 4;        // Menos de 1 día: 4 horas por punto
+      else if (diffDays <= 7) step = 3;   // 1-7 días: 3 horas por punto
+      else if (diffDays <= 30) step = 24; // 1-30 días: 1 punto por día
+      else step = 24 * 7;                 // Más de 30 días: 1 punto por semana
+      
+      this.construirSeriesConRango(desde, hasta, step);
+    } else {
+      // Usar rangos predefinidos
+      hasta = ahora;
+      if (this.selectedDateRange === 'week') desde = new Date(ahora.getTime() - 7 * 24 * 60 * 60 * 1000);
+      else if (this.selectedDateRange === 'month') desde = new Date(ahora.getTime() - 30 * 24 * 60 * 60 * 1000);
+      else desde = new Date(ahora.getTime() - 24 * 60 * 60 * 1000);
+      
+      let step = 4; // horas por punto
+      if (this.selectedDateRange === 'week') step = 3;     // 8 puntos por día para mayor detalle
+      else if (this.selectedDateRange === 'month') step = 24; // 1 punto por día
+      
+      this.construirSeriesConRango(desde, hasta, step);
+    }
+  }
+  
+  private construirSeriesConRango(desde: Date, hasta: Date, stepHours: number): void {
+    const construirSerie = (items: any[], step: number) => {
+      const filtrados = items.filter((i: any) => {
+        const fechaLectura = new Date(i.fecha_lectura);
+        return fechaLectura >= desde && fechaLectura <= hasta;
+      });
+      
       const serie: { time: string, value: number }[] = [];
-      const totalHoras = Math.ceil((ahora.getTime() - desde.getTime()) / (60 * 60 * 1000));
-      for (let h = 0; h <= totalHoras; h += stepHours) {
+      const totalHoras = Math.ceil((hasta.getTime() - desde.getTime()) / (60 * 60 * 1000));
+      
+      for (let h = 0; h <= totalHoras; h += step) {
         const t0 = new Date(desde.getTime() + h * 60 * 60 * 1000);
-        const t1 = new Date(Math.min(ahora.getTime(), t0.getTime() + stepHours * 60 * 60 * 1000));
+        const t1 = new Date(Math.min(hasta.getTime(), t0.getTime() + step * 60 * 60 * 1000));
+        
         const enVentana = filtrados.filter((r: any) => {
           const t = new Date(r.fecha_lectura);
           return t >= t0 && t < t1;
         });
+        
         if (enVentana.length === 0) continue; // saltar huecos sin lecturas
         const avg = enVentana.reduce((acc: number, r: any) => acc + Number(r.valor), 0) / enVentana.length;
         if (!Number.isFinite(avg) || Math.abs(avg) < 1e-6) continue; // saltar ceros/vacios
-        const label = this.selectedDateRange === 'today'
-          ? `${('0' + t0.getHours()).slice(-2)}:00`
-          : `${('0' + (t0.getMonth() + 1)).slice(-2)}/${('0' + t0.getDate()).slice(-2)}`;
+        
+        // Formatear etiqueta según el rango
+        let label: string;
+        if (this.customDateRange) {
+          // Para rangos personalizados, mostrar fecha y hora
+          if (step >= 24) {
+            label = `${('0' + (t0.getMonth() + 1)).slice(-2)}/${('0' + t0.getDate()).slice(-2)}`;
+          } else {
+            label = `${('0' + (t0.getMonth() + 1)).slice(-2)}/${('0' + t0.getDate()).slice(-2)} ${('0' + t0.getHours()).slice(-2)}:00`;
+          }
+        } else {
+          // Para rangos predefinidos, usar formato original
+          if (this.selectedDateRange === 'today') {
+            label = `${('0' + t0.getHours()).slice(-2)}:00`;
+          } else {
+            label = `${('0' + (t0.getMonth() + 1)).slice(-2)}/${('0' + t0.getDate()).slice(-2)}`;
+          }
+        }
+        
         serie.push({ time: label, value: Number(avg.toFixed(2)) });
       }
       return serie;
     };
 
-    let step = 4; // horas por punto
-    if (this.selectedDateRange === 'week') step = 3;     // 8 puntos por día para mayor detalle
-    else if (this.selectedDateRange === 'month') step = 24; // 1 punto por día
-    this.pm25Data = construirSerie(this.rawLecturas.mq135, step);
-    this.airQualityData = construirSerie(this.rawLecturas.mq7, step);
-    this.methaneData = construirSerie(this.rawLecturas.mq4, step);
+    this.pm25Data = construirSerie(this.rawLecturas.mq135, stepHours);
+    this.airQualityData = construirSerie(this.rawLecturas.mq7, stepHours);
+    this.methaneData = construirSerie(this.rawLecturas.mq4, stepHours);
 
     // Guardar copias
     this.pm25DataOriginal = [...this.pm25Data];
@@ -1111,10 +1286,28 @@ export class AdminReportsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.cdr.detectChanges();
   }
 
+  // ---------- Helper para fechas ----------
+  private formatDate(date: any): string {
+    if (!date) return '—';
+    try {
+      const d = new Date(date);
+      if (isNaN(d.getTime())) return '—';
+      return d.toLocaleString('es-ES', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch {
+      return '—';
+    }
+  }
+
   // ---------- Exportación ----------
   abrirDialogoExportar(): void {
     const dialogRef = this.dialog.open(ExportDialogComponent, {
-      width: '520px',
+      width: '600px',
       maxWidth: '90vw',
       data: {
         type: 'pdf',
@@ -1122,6 +1315,9 @@ export class AdminReportsComponent implements OnInit, OnDestroy, AfterViewInit {
           dashboard: true,
           sensores: true,
           alertas: true,
+          alertasSistema: true,
+          alertasPersonalizadas: true,
+          notificaciones: true,
           usuarios: true,
           analisisTemporal: true
         }
@@ -1161,19 +1357,51 @@ export class AdminReportsComponent implements OnInit, OnDestroy, AfterViewInit {
           autoTable(doc, {
             startY: y,
             head: [['Nombre', 'Estado', 'Última lectura']],
-            body: (this.sensoresFiltrados.length ? this.sensoresFiltrados : this.sensors).map(s => [s.name, s.status, s.lastUpdate?.toLocaleString?.() || '—'])
+            body: (this.sensoresFiltrados.length ? this.sensoresFiltrados : this.sensors).map(s => [s.name, s.status, this.formatDate(s.lastUpdate)])
           });
           // @ts-ignore
           y = (doc as any).lastAutoTable.finalY + 16;
         }
 
-        if (sections.alertas) {
-          addTitle('Alertas');
+        if (sections.alertasSistema) {
+          addTitle('Alertas del Sistema');
           // @ts-ignore
           autoTable(doc, {
             startY: y,
             head: [['Sensor', 'Severidad', 'Mensaje', 'Usuario', 'Fecha']],
-            body: (this.alertasFiltradas.length ? this.alertasFiltradas : this.alertasData).map((a: any) => [a.sensor, a.severidad, a.mensaje || a.descripcion || '', (a.usuario || a.usuario_nombre || a.correo || a.email || '—'), new Date(a.timestamp || a.creado_en).toLocaleString()])
+            body: (this.alertasFiltradas.length ? this.alertasFiltradas : this.alertasData).map((a: any) => [a.sensor, a.severidad, a.mensaje || a.descripcion || '', (a.usuario || a.usuario_nombre || a.correo || a.email || '—'), this.formatDate(a.timestamp || a.creado_en)])
+          });
+          // @ts-ignore
+          y = (doc as any).lastAutoTable.finalY + 16;
+        }
+
+        if (sections.alertasPersonalizadas) {
+          addTitle('Alertas Personalizadas');
+          // @ts-ignore
+          autoTable(doc, {
+            startY: y,
+            head: [['Sensor', 'Severidad', 'Mensaje', 'Usuario', 'Fecha']],
+            body: (this.alertasPersonalizadasFiltradas.length ? this.alertasPersonalizadasFiltradas : this.alertasPersonalizadasData).map((a: any) => [a.sensor, a.severidad, a.mensaje || a.descripcion || '', (a.usuario || a.usuario_nombre || a.correo || a.email || '—'), this.formatDate(a.timestamp || a.creado_en)])
+          });
+          // @ts-ignore
+          y = (doc as any).lastAutoTable.finalY + 16;
+        }
+
+        if (sections.notificaciones) {
+          addTitle('Notificaciones');
+          // @ts-ignore
+          autoTable(doc, {
+            startY: y,
+            head: [['Usuario', 'Título', 'Mensaje', 'Tipo', 'Sensor', 'Estado', 'Fecha']],
+            body: this.notificacionesDataSource.data.map((n: any) => [
+              this.usuariosMap.get(n.usuario_id) || 'Usuario',
+              n.titulo || '',
+              n.mensaje || '',
+              n.tipo || '',
+              n.sensor_codigo === 'general' ? 'General' : n.sensor_codigo || '',
+              n.estado || '',
+              this.formatDate(n.fecha_creacion || n.creado_en)
+            ])
           });
           // @ts-ignore
           y = (doc as any).lastAutoTable.finalY + 16;
@@ -1190,7 +1418,7 @@ export class AdminReportsComponent implements OnInit, OnDestroy, AfterViewInit {
               u.rol,
               this.stringifySensoresAsignados(u.sensores_asignados),
               u.esta_conectado ? 'Sí' : 'No',
-              u.ultima_conexion ? new Date(u.ultima_conexion).toLocaleString() : '—',
+              this.formatDate(u.ultima_conexion),
               u.total_lecturas ?? 0
             ])
           });
@@ -1317,16 +1545,32 @@ export class AdminReportsComponent implements OnInit, OnDestroy, AfterViewInit {
       ]]);
     }
     if (sections.sensores) {
-      const lista = (this.sensoresFiltrados.length ? this.sensoresFiltrados : this.sensors).map((s: any) => [s.name, s.status, s.lastUpdate?.toLocaleString?.() || '—']);
+      const lista = (this.sensoresFiltrados.length ? this.sensoresFiltrados : this.sensors).map((s: any) => [s.name, s.status, this.formatDate(s.lastUpdate)]);
       push('Sensores', ['Nombre','Estado','Última lectura'], lista);
     }
-    if (sections.alertas) {
-      const lista = (this.alertasFiltradas.length ? this.alertasFiltradas : this.alertasData).map((a: any) => [a.sensor, a.severidad, a.mensaje || a.descripcion || '', (a.usuario || a.usuario_nombre || a.correo || a.email || '—'), new Date(a.timestamp || a.creado_en).toLocaleString()]);
-      push('Alertas', ['Sensor','Severidad','Mensaje','Usuario','Fecha'], lista);
+    if (sections.alertasSistema) {
+      const lista = (this.alertasFiltradas.length ? this.alertasFiltradas : this.alertasData).map((a: any) => [a.sensor, a.severidad, a.mensaje || a.descripcion || '', (a.usuario || a.usuario_nombre || a.correo || a.email || '—'), this.formatDate(a.timestamp || a.creado_en)]);
+      push('Alertas del Sistema', ['Sensor','Severidad','Mensaje','Usuario','Fecha'], lista);
+    }
+    if (sections.alertasPersonalizadas) {
+      const lista = (this.alertasPersonalizadasFiltradas.length ? this.alertasPersonalizadasFiltradas : this.alertasPersonalizadasData).map((a: any) => [a.sensor, a.severidad, a.mensaje || a.descripcion || '', (a.usuario || a.usuario_nombre || a.correo || a.email || '—'), this.formatDate(a.timestamp || a.creado_en)]);
+      push('Alertas Personalizadas', ['Sensor','Severidad','Mensaje','Usuario','Fecha'], lista);
+    }
+    if (sections.notificaciones) {
+      const lista = this.notificacionesDataSource.data.map((n: any) => [
+        this.usuariosMap.get(n.usuario_id) || 'Usuario',
+        n.titulo || '',
+        n.mensaje || '',
+        n.tipo || '',
+        n.sensor_codigo === 'general' ? 'General' : n.sensor_codigo || '',
+        n.estado || '',
+        this.formatDate(n.fecha_creacion || n.creado_en)
+      ]);
+      push('Notificaciones', ['Usuario','Título','Mensaje','Tipo','Sensor','Estado','Fecha'], lista);
     }
     if (sections.usuarios && this.usuariosData?.actividad_usuarios) {
       const lista = this.usuariosData.actividad_usuarios.map((u: any) => [
-        `${u.nombre} (${u.email})`, u.rol, this.stringifySensoresAsignados(u.sensores_asignados), u.esta_conectado ? 'Sí' : 'No', u.ultima_conexion ? new Date(u.ultima_conexion).toLocaleString() : '—', String(u.total_lecturas ?? 0)
+        `${u.nombre} (${u.email})`, u.rol, this.stringifySensoresAsignados(u.sensores_asignados), u.esta_conectado ? 'Sí' : 'No', this.formatDate(u.ultima_conexion), String(u.total_lecturas ?? 0)
       ]);
       push('Usuarios', ['Usuario','Rol','Sensores','Conectado','Última sesión','Total lecturas'], lista);
     }
@@ -1360,16 +1604,32 @@ export class AdminReportsComponent implements OnInit, OnDestroy, AfterViewInit {
       ]]);
     }
     if (sections.sensores) {
-      const lista = (this.sensoresFiltrados.length ? this.sensoresFiltrados : this.sensors).map((s: any) => [s.name, s.status, s.lastUpdate?.toLocaleString?.() || '—']);
+      const lista = (this.sensoresFiltrados.length ? this.sensoresFiltrados : this.sensors).map((s: any) => [s.name, s.status, this.formatDate(s.lastUpdate)]);
       table('Sensores', ['Nombre','Estado','Última lectura'], lista);
     }
-    if (sections.alertas) {
-      const lista = (this.alertasFiltradas.length ? this.alertasFiltradas : this.alertasData).map((a: any) => [a.sensor, a.severidad, a.mensaje || a.descripcion || '', (a.usuario || a.usuario_nombre || a.correo || a.email || '—'), new Date(a.timestamp || a.creado_en).toLocaleString()]);
-      table('Alertas', ['Sensor','Severidad','Mensaje','Usuario','Fecha'], lista);
+    if (sections.alertasSistema) {
+      const lista = (this.alertasFiltradas.length ? this.alertasFiltradas : this.alertasData).map((a: any) => [a.sensor, a.severidad, a.mensaje || a.descripcion || '', (a.usuario || a.usuario_nombre || a.correo || a.email || '—'), this.formatDate(a.timestamp || a.creado_en)]);
+      table('Alertas del Sistema', ['Sensor','Severidad','Mensaje','Usuario','Fecha'], lista);
+    }
+    if (sections.alertasPersonalizadas) {
+      const lista = (this.alertasPersonalizadasFiltradas.length ? this.alertasPersonalizadasFiltradas : this.alertasPersonalizadasData).map((a: any) => [a.sensor, a.severidad, a.mensaje || a.descripcion || '', (a.usuario || a.usuario_nombre || a.correo || a.email || '—'), this.formatDate(a.timestamp || a.creado_en)]);
+      table('Alertas Personalizadas', ['Sensor','Severidad','Mensaje','Usuario','Fecha'], lista);
+    }
+    if (sections.notificaciones) {
+      const lista = this.notificacionesDataSource.data.map((n: any) => [
+        this.usuariosMap.get(n.usuario_id) || 'Usuario',
+        n.titulo || '',
+        n.mensaje || '',
+        n.tipo || '',
+        n.sensor_codigo === 'general' ? 'General' : n.sensor_codigo || '',
+        n.estado || '',
+        this.formatDate(n.fecha_creacion || n.creado_en)
+      ]);
+      table('Notificaciones', ['Usuario','Título','Mensaje','Tipo','Sensor','Estado','Fecha'], lista);
     }
     if (sections.usuarios && this.usuariosData?.actividad_usuarios) {
       const lista = this.usuariosData.actividad_usuarios.map((u: any) => [
-        `${u.nombre} (${u.email})`, u.rol, this.stringifySensoresAsignados(u.sensores_asignados), u.esta_conectado ? 'Sí' : 'No', u.ultima_conexion ? new Date(u.ultima_conexion).toLocaleString() : '—', String(u.total_lecturas ?? 0)
+        `${u.nombre} (${u.email})`, u.rol, this.stringifySensoresAsignados(u.sensores_asignados), u.esta_conectado ? 'Sí' : 'No', this.formatDate(u.ultima_conexion), String(u.total_lecturas ?? 0)
       ]);
       table('Usuarios', ['Usuario','Rol','Sensores','Conectado','Última sesión','Total lecturas'], lista);
     }
@@ -1528,60 +1788,404 @@ export class AdminReportsComponent implements OnInit, OnDestroy, AfterViewInit {
       this.cargarPaginaUsuarios(page);
     }
   }
+
 }
 
 // ---------- Diálogo de Exportación ----------
-import { Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Component as NgComponent } from '@angular/core';
 // (usamos los módulos ya importados arriba en el archivo)
 
-@NgComponent({
+@Component({
   selector: 'app-export-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatDialogModule, MatRadioModule, MatCheckboxModule, MatButtonModule],
+  imports: [CommonModule, FormsModule, MatDialogModule, MatRadioModule, MatCheckboxModule, MatButtonModule, MatIconModule, MatCardModule, MatDividerModule],
   template: `
-  <h2 mat-dialog-title>Exportar</h2>
+  <div class="dialog-header">
+    <mat-icon class="header-icon">file_download</mat-icon>
+    <h2 mat-dialog-title>Exportar Reportes</h2>
+  </div>
+  
   <mat-dialog-content>
-    <h3>Formato</h3>
-    <mat-radio-group [(ngModel)]="type">
-      <mat-radio-button value="pdf">PDF</mat-radio-button>
-      <mat-radio-button value="excel">Excel</mat-radio-button>
-      <mat-radio-button value="csv">CSV</mat-radio-button>
-    </mat-radio-group>
-    <h3 style="margin-top:16px;">Secciones</h3>
-    <mat-checkbox [(ngModel)]="sections.dashboard">Dashboard</mat-checkbox>
-    <mat-checkbox [(ngModel)]="sections.sensores">Estado de sensores</mat-checkbox>
-    <mat-checkbox [(ngModel)]="sections.alertas">Alertas</mat-checkbox>
-    <mat-checkbox [(ngModel)]="sections.usuarios">Usuarios</mat-checkbox>
-    <mat-checkbox [(ngModel)]="sections.analisisTemporal">Análisis temporal</mat-checkbox>
-    <div *ngIf="!hasAnySectionSelected()" style="color:#b91c1c; margin-top:8px; font-size: 12px;">Debes elegir al menos una sección</div>
+    <!-- Formato de exportación -->
+    <mat-card class="format-card">
+      <mat-card-header>
+        <mat-card-title>Formato de Exportación</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-radio-group [(ngModel)]="type" class="format-group">
+          <mat-radio-button value="pdf" class="format-option">
+            <mat-icon>picture_as_pdf</mat-icon>
+            <span>PDF</span>
+            <small>Documento completo con gráficos</small>
+          </mat-radio-button>
+          <mat-radio-button value="excel" class="format-option">
+            <mat-icon>table_chart</mat-icon>
+            <span>Excel</span>
+            <small>Hoja de cálculo editable</small>
+          </mat-radio-button>
+          <mat-radio-button value="csv" class="format-option">
+            <mat-icon>text_snippet</mat-icon>
+            <span>CSV</span>
+            <small>Datos separados por comas</small>
+          </mat-radio-button>
+        </mat-radio-group>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Secciones a incluir -->
+    <mat-card class="sections-card">
+      <mat-card-header>
+        <mat-card-title>Secciones a Incluir</mat-card-title>
+        <mat-card-subtitle>Selecciona qué datos incluir en el reporte</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="sections-grid">
+          <!-- Dashboard -->
+          <div class="section-item" [class.selected]="sections.dashboard">
+            <mat-checkbox [(ngModel)]="sections.dashboard" color="primary">
+              <div class="section-content">
+                <mat-icon>dashboard</mat-icon>
+                <div class="section-text">
+                  <span class="section-title">Dashboard</span>
+                  <small>Métricas generales del sistema</small>
+                </div>
+              </div>
+            </mat-checkbox>
+          </div>
+
+          <!-- Sensores -->
+          <div class="section-item" [class.selected]="sections.sensores">
+            <mat-checkbox [(ngModel)]="sections.sensores" color="primary">
+              <div class="section-content">
+                <mat-icon>sensors</mat-icon>
+                <div class="section-text">
+                  <span class="section-title">Estado de Sensores</span>
+                  <small>Estado actual y valores de sensores</small>
+                </div>
+              </div>
+            </mat-checkbox>
+          </div>
+
+          <!-- Alertas del Sistema -->
+          <div class="section-item" [class.selected]="sections.alertasSistema">
+            <mat-checkbox [(ngModel)]="sections.alertasSistema" color="primary">
+              <div class="section-content">
+                <mat-icon>warning</mat-icon>
+                <div class="section-text">
+                  <span class="section-title">Alertas del Sistema</span>
+                  <small>Alertas automáticas generadas por sensores</small>
+                </div>
+              </div>
+            </mat-checkbox>
+          </div>
+
+          <!-- Alertas Personalizadas -->
+          <div class="section-item" [class.selected]="sections.alertasPersonalizadas">
+            <mat-checkbox [(ngModel)]="sections.alertasPersonalizadas" color="primary">
+              <div class="section-content">
+                <mat-icon>notifications_active</mat-icon>
+                <div class="section-text">
+                  <span class="section-title">Alertas Personalizadas</span>
+                  <small>Alertas configuradas manualmente</small>
+                </div>
+              </div>
+            </mat-checkbox>
+          </div>
+
+          <!-- Notificaciones -->
+          <div class="section-item" [class.selected]="sections.notificaciones">
+            <mat-checkbox [(ngModel)]="sections.notificaciones" color="primary">
+              <div class="section-content">
+                <mat-icon>notifications</mat-icon>
+                <div class="section-text">
+                  <span class="section-title">Notificaciones</span>
+                  <small>Notificaciones enviadas a usuarios</small>
+                </div>
+              </div>
+            </mat-checkbox>
+          </div>
+
+          <!-- Usuarios -->
+          <div class="section-item" [class.selected]="sections.usuarios">
+            <mat-checkbox [(ngModel)]="sections.usuarios" color="primary">
+              <div class="section-content">
+                <mat-icon>people</mat-icon>
+                <div class="section-text">
+                  <span class="section-title">Usuarios</span>
+                  <small>Lista de usuarios y su actividad</small>
+                </div>
+              </div>
+            </mat-checkbox>
+          </div>
+
+          <!-- Análisis Temporal -->
+          <div class="section-item" [class.selected]="sections.analisisTemporal">
+            <mat-checkbox [(ngModel)]="sections.analisisTemporal" color="primary">
+              <div class="section-content">
+                <mat-icon>timeline</mat-icon>
+                <div class="section-text">
+                  <span class="section-title">Análisis Temporal</span>
+                  <small>Datos históricos y tendencias</small>
+                </div>
+              </div>
+            </mat-checkbox>
+          </div>
+        </div>
+
+        <!-- Validación -->
+        <div *ngIf="!hasAnySectionSelected()" class="validation-error">
+          <mat-icon>error</mat-icon>
+          <span>Debes seleccionar al menos una sección para exportar</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
   </mat-dialog-content>
+  
   <mat-dialog-actions align="end">
-    <button mat-button (click)="dialogRef.close()">Cancelar</button>
-    <button mat-flat-button color="primary" [disabled]="!hasAnySectionSelected()" (click)="confirmar()">Exportar</button>
+    <button mat-button (click)="dialogRef.close()">
+      <mat-icon>close</mat-icon>
+      Cancelar
+    </button>
+    <button mat-flat-button color="primary" [disabled]="!hasAnySectionSelected()" (click)="confirmar()">
+      <mat-icon>file_download</mat-icon>
+      Exportar
+    </button>
   </mat-dialog-actions>
-  `
+  `,
+  styles: [`
+    .dialog-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 24px 24px 0 24px;
+      border-bottom: 1px solid #e0e0e0;
+      margin-bottom: 16px;
+    }
+    
+    .header-icon {
+      color: #1976d2;
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+    }
+    
+    .dialog-header h2 {
+      margin: 0;
+      color: #333;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .format-card, .sections-card {
+      margin-bottom: 16px;
+      border: 1px solid #e0e0e0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .format-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .format-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .format-option:hover {
+      background-color: #f5f5f5;
+    }
+
+    .format-option mat-icon {
+      color: #666;
+    }
+
+    .format-option span {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .format-option small {
+      color: #666;
+      margin-left: auto;
+    }
+
+    .sections-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .section-item {
+      padding: 16px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .section-item:hover {
+      background-color: #f8f9fa;
+      border-color: #1976d2;
+    }
+
+    .section-item.selected {
+      background-color: #e3f2fd;
+      border-color: #1976d2;
+      box-shadow: 0 2px 8px rgba(25, 118, 210, 0.2);
+    }
+
+    .section-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      pointer-events: none;
+    }
+
+    .section-content mat-icon {
+      color: #666;
+      font-size: 20px;
+    }
+
+    .section-item.selected .section-content mat-icon {
+      color: #1976d2;
+    }
+
+    .section-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .section-title {
+      font-weight: 500;
+      color: #333;
+      font-size: 0.9rem;
+    }
+
+    .section-item.selected .section-title {
+      color: #1976d2;
+      font-weight: 600;
+    }
+
+    .section-text small {
+      color: #666;
+      font-size: 0.75rem;
+      margin-top: 2px;
+    }
+
+    .section-item.selected .section-text small {
+      color: #1976d2;
+    }
+
+    mat-checkbox {
+      width: 100%;
+    }
+
+    mat-checkbox ::ng-deep .mat-checkbox-layout {
+      width: 100%;
+    }
+
+    mat-checkbox ::ng-deep .mat-checkbox-inner-container {
+      margin-right: 12px;
+    }
+
+    .validation-error {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #d32f2f;
+      background-color: #ffebee;
+      padding: 12px;
+      border-radius: 4px;
+      margin-top: 16px;
+      font-size: 0.875rem;
+    }
+
+    .validation-error mat-icon {
+      font-size: 18px;
+    }
+
+    mat-dialog-content {
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    mat-dialog-actions {
+      padding: 16px 24px;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    mat-dialog-actions button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    @media (max-width: 600px) {
+      .sections-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .dialog-header {
+        padding: 16px 16px 0 16px;
+      }
+
+      .format-group {
+        gap: 8px;
+      }
+
+      .format-option {
+        padding: 8px;
+      }
+    }
+  `]
 })
 export class ExportDialogComponent {
   type: 'pdf' | 'excel' | 'csv';
   sections: any;
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<ExportDialogComponent>) {
     this.type = data?.type || 'pdf';
-    this.sections = data?.sections || { dashboard: true, sensores: true, alertas: true, usuarios: true, analisisTemporal: true };
+    this.sections = data?.sections || { 
+      dashboard: true, 
+      sensores: true, 
+      alertasSistema: true,
+      alertasPersonalizadas: true,
+      notificaciones: true,
+      usuarios: true, 
+      analisisTemporal: true 
+    };
   }
-  confirmar() { if (this.hasAnySectionSelected()) { this.dialogRef.close({ type: this.type, sections: this.sections }); } }
+  confirmar() { 
+    if (this.hasAnySectionSelected()) { 
+      this.dialogRef.close({ type: this.type, sections: this.sections }); 
+    } 
+  }
   hasAnySectionSelected(): boolean {
-    return !!(this.sections?.dashboard || this.sections?.sensores || this.sections?.alertas || this.sections?.usuarios || this.sections?.analisisTemporal);
+    return !!(this.sections?.dashboard || 
+              this.sections?.sensores || 
+              this.sections?.alertasSistema ||
+              this.sections?.alertasPersonalizadas ||
+              this.sections?.notificaciones ||
+              this.sections?.usuarios || 
+              this.sections?.analisisTemporal);
   }
 }
 
-@NgComponent({
+@Component({
   selector: 'app-notif-edit-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatDialogModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatCheckboxModule],
+  imports: [CommonModule, FormsModule, MatDialogModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatCheckboxModule, MatIconModule, MatCardModule],
   template: `
-  <h2 mat-dialog-title>Editar Notificación</h2>
+  <div class="dialog-header">
+    <mat-icon class="header-icon">edit</mat-icon>
+    <h2 mat-dialog-title>Editar Notificación</h2>
+  </div>
+  
   <mat-dialog-content>
     <div class="dialog-grid">
       <mat-form-field appearance="outline">
@@ -1593,6 +2197,7 @@ export class ExportDialogComponent {
       <mat-form-field appearance="outline">
         <mat-label>Sensor</mat-label>
         <mat-select [(ngModel)]="data.sensor_codigo">
+          <mat-option value="general">General</mat-option>
           <mat-option value="mq135">MQ-135</mat-option>
           <mat-option value="mq7">MQ-7</mat-option>
           <mat-option value="mq4">MQ-4</mat-option>
@@ -1617,7 +2222,7 @@ export class ExportDialogComponent {
       </mat-form-field>
       <mat-form-field appearance="outline" class="full">
         <mat-label>Mensaje</mat-label>
-        <input matInput [(ngModel)]="data.mensaje" />
+        <textarea matInput [(ngModel)]="data.mensaje" rows="3"></textarea>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Tipo</mat-label>
@@ -1632,17 +2237,248 @@ export class ExportDialogComponent {
       </div>
     </div>
   </mat-dialog-content>
+  
   <mat-dialog-actions align="end">
     <button mat-button (click)="dialogRef.close()">Cancelar</button>
     <button mat-flat-button color="primary" (click)="guardar()">Guardar</button>
   </mat-dialog-actions>
   `,
   styles: [`
-    .dialog-grid { display:grid; grid-template-columns: repeat(2, minmax(160px, 1fr)); gap: 1rem; }
+    .dialog-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 24px 24px 0 24px;
+      border-bottom: 1px solid #eee;
+      margin-bottom: 16px;
+    }
+    
+    .header-icon {
+      color: #1976d2;
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+    }
+    
+    .dialog-header h2 {
+      margin: 0;
+      color: #333;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    
+    .dialog-grid { 
+      display: grid; 
+      grid-template-columns: repeat(2, minmax(160px, 1fr)); 
+      gap: 1rem; 
+    }
+    
     .full { grid-column: 1 / -1; }
+    
+    mat-dialog-content {
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+    
+    @media (max-width: 600px) {
+      .dialog-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .dialog-header {
+        padding: 16px 16px 0 16px;
+      }
+    }
   `]
 })
 export class NotifEditDialogComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<NotifEditDialogComponent>) {}
   guardar() { this.dialogRef.close(this.data); }
+}
+
+@Component({
+  selector: 'app-notif-create-dialog',
+  standalone: true,
+  imports: [CommonModule, FormsModule, MatDialogModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatCheckboxModule, MatIconModule, MatCardModule, MatChipsModule],
+  template: `
+  <div class="dialog-header">
+    <mat-icon class="header-icon">notifications</mat-icon>
+    <h2 mat-dialog-title>Nueva Notificación Personalizada</h2>
+  </div>
+  
+  <mat-dialog-content>
+    <div class="dialog-grid">
+      <!-- Usuario (Obligatorio) -->
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Usuario</mat-label>
+        <mat-select [(ngModel)]="data.usuario_id" required>
+          <mat-option *ngFor="let u of (data.usuarios || [])" [value]="u.id">
+            <div class="user-option">
+              <span class="user-name">{{ u.nombre }}</span>
+              <span class="user-email">{{ u.email }}</span>
+            </div>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Título (Obligatorio) -->
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Título de la notificación</mat-label>
+        <input matInput [(ngModel)]="data.titulo" required />
+      </mat-form-field>
+
+      <!-- Mensaje (Obligatorio) -->
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Mensaje</mat-label>
+        <textarea matInput [(ngModel)]="data.mensaje" rows="3" required></textarea>
+      </mat-form-field>
+
+      <!-- Tipo de notificación -->
+      <mat-form-field appearance="outline">
+        <mat-label>Tipo de notificación</mat-label>
+        <mat-select [(ngModel)]="data.tipo">
+          <mat-option value="info">Informativa</mat-option>
+          <mat-option value="warning">Advertencia</mat-option>
+          <mat-option value="danger">Urgente</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Sensor relacionado (Opcional) -->
+      <mat-form-field appearance="outline">
+        <mat-label>Sensor relacionado</mat-label>
+        <mat-select [(ngModel)]="data.sensor_codigo">
+          <mat-option value="">Sin sensor específico</mat-option>
+          <mat-option value="mq135">MQ-135 (Calidad del aire)</mat-option>
+          <mat-option value="mq7">MQ-7 (Monóxido de carbono)</mat-option>
+          <mat-option value="mq4">MQ-4 (Metano)</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Valor del sensor (si se selecciona un sensor) -->
+      <mat-form-field appearance="outline" *ngIf="data.sensor_codigo">
+        <mat-label>Valor del sensor</mat-label>
+        <input matInput type="number" [(ngModel)]="data.valor" step="0.01" />
+      </mat-form-field>
+
+      <!-- Estado del sensor (si se selecciona un sensor) -->
+      <mat-form-field appearance="outline" *ngIf="data.sensor_codigo">
+        <mat-label>Estado del sensor</mat-label>
+        <mat-select [(ngModel)]="data.estado">
+          <mat-option value="bueno">Bueno</mat-option>
+          <mat-option value="advertencia">Advertencia</mat-option>
+          <mat-option value="malo">Malo</mat-option>
+          <mat-option value="desconectado">Desconectado</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Opciones adicionales -->
+      <div class="full options-section">
+        <mat-checkbox [(ngModel)]="data.leida">
+          Marcar como leída automáticamente
+        </mat-checkbox>
+        <mat-checkbox [(ngModel)]="data.prioridad_alta">
+          Notificación de alta prioridad
+        </mat-checkbox>
+      </div>
+    </div>
+  </mat-dialog-content>
+  
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="dialogRef.close()">Cancelar</button>
+    <button mat-flat-button color="primary" (click)="enviar()" 
+            [disabled]="!data.usuario_id || !data.titulo || !data.mensaje">
+      <mat-icon>send</mat-icon>
+      Enviar Notificación
+    </button>
+  </mat-dialog-actions>
+  `,
+  styles: [`
+    .dialog-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 24px 24px 0 24px;
+      border-bottom: 1px solid #eee;
+      margin-bottom: 16px;
+    }
+    
+    .header-icon {
+      color: #1976d2;
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+    }
+    
+    .dialog-header h2 {
+      margin: 0;
+      color: #333;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    
+    .dialog-grid { 
+      display: grid; 
+      grid-template-columns: repeat(2, minmax(160px, 1fr)); 
+      gap: 1rem; 
+    }
+    
+    .full { grid-column: 1 / -1; }
+    
+    .user-option {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .user-name {
+      font-weight: 500;
+      color: #374151;
+    }
+    
+    .user-email {
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+    
+    .options-section {
+      margin-top: 16px;
+      padding: 16px;
+      background: #f5f5f5;
+      border-radius: 8px;
+      border-left: 4px solid #2196f3;
+    }
+    
+    mat-dialog-content {
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+    
+    @media (max-width: 600px) {
+      .dialog-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .dialog-header {
+        padding: 16px 16px 0 16px;
+      }
+    }
+  `]
+})
+export class NotifCreateDialogComponent {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<NotifCreateDialogComponent>) {
+    // Valores por defecto
+    this.data = {
+      ...this.data,
+      tipo: 'info',
+      sensor_codigo: '',
+      valor: 0,
+      estado: 'bueno',
+      leida: false,
+      prioridad_alta: false
+    };
+  }
+  
+  enviar() { 
+    this.dialogRef.close(this.data); 
+  }
 }
